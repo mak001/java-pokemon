@@ -2,15 +2,14 @@ package com.pokemon.room;
 
 import java.awt.Image;
 
-import com.pokemon.root.GameObject;
+import com.pokemon.root.GeneralObject;
 
-public class Wall extends GameObject {
+public class Wall extends GeneralObject {
 
-	public Wall(Image i, int x, int y) {
-		setImage(i);
-		setX(x);
-		setY(y);
-		this.setCollision(Collision.YES);
+	public Wall(Image image, Coordinate coordinate) {
+		// TODO Auto-generated constructor stub
+		this.coordinate = coordinate;
+		this.collision = Collision.WALL;
 	}
 
 }

@@ -12,7 +12,6 @@ public class GameBase extends Game {
 
 	private static Commands commands;
 	private Player player;
-	private static Grid grid;
 
 	private static int w;
 	private static int h;
@@ -46,14 +45,8 @@ public class GameBase extends Game {
 
 	@Override
 	public void initialize() {
-		player = new Player();
-		grid = new Grid(32);
 		// TODO Auto-generated method stub
 
-	}
-
-	public static Grid getGrid() {
-		return grid;
 	}
 
 	@Override

@@ -1,5 +1,9 @@
-package com.pokemon.root;
+package com.pokemon.battle;
 
+/**
+ * All the moves of the pokemon
+ *
+ */
 public enum Move {
 
 	NULL("----", null, "No move. (default)", 0);
