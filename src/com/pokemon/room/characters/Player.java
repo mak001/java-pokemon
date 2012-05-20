@@ -1,4 +1,4 @@
-package com.pokemon.root;
+package com.pokemon.room.characters;
 
 import java.awt.Graphics;
 

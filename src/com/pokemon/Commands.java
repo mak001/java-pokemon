@@ -1,7 +1,10 @@
 package com.pokemon;
 
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.HashMap;
+
+import com.pokemon.loader.Settings;
 
 public class Commands {
 
@@ -38,20 +41,20 @@ public class Commands {
 
 	// A = talk/select
 	// B = cancel
-	public static enum Keys {
+	public static enum Keys implements Serializable {
 		UP, DOWN, LEFT, RIGHT, A, B, START, SELECT
 	}
 
-	public static enum Configuration {
+	public static enum Configuration implements Serializable {
 		DEFAULT_1, DEFAULT_2, DEFAULT_3, CUSTOM
 	}
 
-	HashMap<Keys, Integer> CURRENT;
+	private HashMap<Keys, Integer> CURRENT;
 
-	HashMap<Keys, Integer> DEFAULT_1 = new HashMap<Keys, Integer>();
-	HashMap<Keys, Integer> DEFAULT_2 = new HashMap<Keys, Integer>();
-	HashMap<Keys, Integer> DEFAULT_3 = new HashMap<Keys, Integer>();
-	HashMap<Keys, Integer> CUSTOM = new HashMap<Keys, Integer>();
+	private HashMap<Keys, Integer> DEFAULT_1 = new HashMap<Keys, Integer>();
+	private HashMap<Keys, Integer> DEFAULT_2 = new HashMap<Keys, Integer>();
+	private HashMap<Keys, Integer> DEFAULT_3 = new HashMap<Keys, Integer>();
+	private HashMap<Keys, Integer> CUSTOM = new HashMap<Keys, Integer>();
 
 	public int getKey(Keys k) {
 		return CURRENT.get(k).intValue();
@@ -72,18 +75,22 @@ public class Commands {
 		switch (c) {
 		case DEFAULT_1:
 			CURRENT = DEFAULT_1;
+			Settings.put("COMMANDS", "DEFAULT_1");
 			break;
 
 		case DEFAULT_2:
 			CURRENT = DEFAULT_2;
+			Settings.put("COMANDS", "DEFAULT_2");
 			break;
 
 		case DEFAULT_3:
 			CURRENT = DEFAULT_3;
+			Settings.put("COMANDS", "DEFAULT_3");
 			break;
 
 		case CUSTOM:
 			CURRENT = CUSTOM;
+			Settings.put("COMANDS", CURRENT.toString());
 			break;
 		}
 	}

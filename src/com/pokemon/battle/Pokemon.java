@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 public class Pokemon {
 
-	ArrayList<Move> moves = new ArrayList<Move>();
+	private ArrayList<Move> moves = new ArrayList<Move>();
+	private int level;
+	private int hp;
 
 	public Pokemon(Move[] m) {
 		for (int i = 0; i < 4; i++) {

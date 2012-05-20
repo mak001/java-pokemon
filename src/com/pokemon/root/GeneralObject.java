@@ -1,11 +1,16 @@
 package com.pokemon.root;
 
+import java.awt.Image;
+import java.io.Serializable;
+
 import com.pokemon.room.Coordinate;
 
-public abstract class GeneralObject {
+public abstract class GeneralObject implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	protected Collision collision;
 	protected Coordinate coordinate;
+	protected Image image;
 
 	/**
 	 * An enum of all the collision types <br>
@@ -44,6 +49,14 @@ public abstract class GeneralObject {
 	 */
 	public void setCoordinate(Coordinate coordinate) {
 		this.coordinate = coordinate;
+	}
+
+	/**
+	 * Returns the image to draw the object
+	 * 
+	 */
+	public Image getImage() {
+		return image;
 	}
 
 }

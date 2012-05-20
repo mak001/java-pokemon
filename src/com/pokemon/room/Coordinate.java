@@ -4,6 +4,7 @@ public class Coordinate {
 
 	private int x;
 	private int y;
+	private int offset = 32;
 
 	/**
 	 * Initializes the coordinate.
@@ -26,10 +27,37 @@ public class Coordinate {
 	}
 
 	/**
+	 * This method is for rendering only!
+	 * 
+	 * @return The offset x value of the coordinate
+	 */
+	public int getOffsetX() {
+		return x * getOffset();
+	}
+
+	/**
 	 * @return The y of the coordinate
 	 */
 	public int getY() {
 		return y;
+	}
+
+	/**
+	 * This method is for rendering only!
+	 * 
+	 * @return The offset y value of the coordinate
+	 */
+	public int getOffsetY() {
+		return y * getOffset();
+	}
+
+	/**
+	 * Returns how far apart the Coordinates are apart (Used for rendering)
+	 * 
+	 * @return - the offset of the points
+	 */
+	public int getOffset() {
+		return offset;
 	}
 
 	/**

@@ -1,7 +1,9 @@
-package com.pokemon.room;
+package com.pokemon.room.objects;
 
 import java.awt.Image;
 
+import com.pokemon.room.Coordinate;
+import com.pokemon.room.Room;
 import com.pokemon.root.GeneralObject;
 
 public class Door extends GeneralObject {
@@ -9,11 +11,11 @@ public class Door extends GeneralObject {
 	private Room WARP_ROOM;
 	private Coordinate WARP_COORD;
 
-	public Door(Image i, Coordinate co, Room r, Coordinate coord) {
+	public Door(Image image, Coordinate WARP_COORD, Room WARP_ROOM) {
 		this.collision = Collision.DOOR;
-		this.coordinate = coord;
-		this.WARP_COORD = coord;
-		this.WARP_ROOM = r;
+		this.WARP_COORD = WARP_COORD;
+		this.WARP_ROOM = WARP_ROOM;
+		this.image = image;
 	}
 
 	public Coordinate getCoordWarp() {
