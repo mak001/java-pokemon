@@ -1,0 +1,9 @@
+Na, just kidding, you don't have to read this.
+
+Some notes:
+- Character images are taller than tile images
+- Character images vary in height and width
+      - Usually around 20 px high
+      - Usually 14 to 15 px wide
+
+- Objects/Tile images are 16 X 16 px
