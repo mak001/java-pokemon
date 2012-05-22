@@ -21,14 +21,13 @@ public class NPC extends GeneralCharacter {
 	private int current_coord = -1;
 	private Type type;
 
+	private int ticks = 0;
+	private int delay = 20;
+
 	public enum Type {
 		PROF_OAK, POLICE, SAILOR, CAPTAIN, ROCKET_MALE, ROCKET_FEMALE,
 		SWIMMER_MALE, SWIMMER_FEMALE, BIKER, BUG_CATCHER, CAMPER_MALE,
 		CAMPER_FEMALE, HIKER, SCIENTIST, CHEF, TRAINER_MALE, TRAINER_FEMALE
-	}
-
-	public NPC(String[] text, ArrayList<Coordinate> path) {
-		this("", null, null, text, path);
 	}
 
 	public NPC(Type type, String[] text, ArrayList<Coordinate> path) {
@@ -41,19 +40,20 @@ public class NPC extends GeneralCharacter {
 		this.pokemon = pokemon;
 		this.text = text;
 		this.path = path;
-		if (this.path != null) {
+		if (path.size() > 2) {
 			current_coord = 0;
+			setCoordinate(path.get(0));
 		}
-		setImage();
+		setImage(type);
 	}
 
-	private void setImage() {
+	private void setImage(Type type) {
 		switch (type) {
 		case POLICE:
-			image = image("police", false);
+			setImage(image("police", false));
 			break;
 		case SAILOR:
-			image = image("sailor", false);
+			setImage(image("sailor", false));
 			break;
 
 		}
@@ -62,10 +62,10 @@ public class NPC extends GeneralCharacter {
 	public Image image(String name, boolean battle) {
 		if (battle)
 			return Toolkit.getDefaultToolkit().getImage(
-					NPC.class.getResource("/images/battle/trainers/" + name
-							+ ".png"));
+					getClass().getResource(
+							"/images/battle/trainers/" + name + ".png"));
 		return Toolkit.getDefaultToolkit().getImage(
-				NPC.class.getResource("/images/room/" + name + ".png"));
+				getClass().getResource("/images/room/" + name + ".png"));
 	}
 
 	public int getSpeechLength() {
@@ -80,6 +80,10 @@ public class NPC extends GeneralCharacter {
 		return name;
 	}
 
+	public Type getType() {
+		return type;
+	}
+
 	public String[] getSpeech() {
 		return text;
 	}
@@ -90,17 +94,34 @@ public class NPC extends GeneralCharacter {
 
 	@Override
 	public void draw(Graphics g) {
-		if (current_coord != -1) { // -1 being that it doesn't have a path
-			GameBase.getRoom().setTile(path.get(current_coord + 1), this);
-		} else {
 
+		if (ticks == delay) {
+
+			if (current_coord != -1) { // -1 being that it doesn't have a path
+
+				coordinate = path.get(current_coord);
+
+				GameBase.getRoom().moveCharacterTo(path.get(current_coord),
+						this);
+
+				current_coord++;
+
+				if (current_coord == path.size()) {
+					current_coord = 0;
+				}
+
+				ticks = 0;
+			}
 		}
+		g.drawImage(image, coordinate.getOffsetX(), getDrawY(), null);
+		ticks++;
 		// TODO Auto-generated method stub
 
 	}
 
-	public int getDrawY() {
-		return getCoordinate().getY() + 4;
+	public int getDrawY() { // TODO - write equation to find it, due to varying
+							// Height
+		return getCoordinate().getOffsetY();
 	}
 
 }

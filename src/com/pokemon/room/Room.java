@@ -2,8 +2,8 @@ package com.pokemon.room;
 
 import java.awt.Graphics;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.pokemon.GameBase;
 import com.pokemon.root.GeneralCharacter;
@@ -13,8 +13,8 @@ import com.pokemon.root.GeneralObject.Collision;
 public class Room implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private HashMap<Coordinate, GeneralObject> map = new HashMap<Coordinate, GeneralObject>();
-	private HashMap<Coordinate, GeneralCharacter> npcs = new HashMap<Coordinate, GeneralCharacter>();
+	private ConcurrentHashMap<Coordinate, GeneralObject> map = new ConcurrentHashMap<Coordinate, GeneralObject>();
+	private ConcurrentHashMap<Coordinate, GeneralCharacter> npcs = new ConcurrentHashMap<Coordinate, GeneralCharacter>();
 
 	/**
 	 * 
@@ -25,8 +25,8 @@ public class Room implements Serializable {
 	 * @param npcs
 	 *            - The npcs that normally appear in the room
 	 */
-	public Room(HashMap<Coordinate, GeneralObject> objects,
-			HashMap<Coordinate, GeneralCharacter> npcs) {
+	public Room(ConcurrentHashMap<Coordinate, GeneralObject> objects,
+			ConcurrentHashMap<Coordinate, GeneralCharacter> npcs) {
 		map = objects;
 		for (int i = 0; i < map.size() - 1; i++) {
 			Coordinate c = (Coordinate) map.keySet().toArray()[i];
@@ -66,14 +66,13 @@ public class Room implements Serializable {
 		npcs.put(coord, c);
 	}
 
-	public void moveObjectTo(Coordinate start, Coordinate end, GeneralObject o) {
-		map.put(start, null);
+	public void moveObjectTo(Coordinate end, GeneralObject o) {
+		map.put(o.getCoordinate(), null);
 		map.put(end, o);
 	}
 
-	public void moveCharacterTo(Coordinate start, Coordinate end,
-			GeneralCharacter c) {
-		npcs.put(start, null);
+	public void moveCharacterTo(Coordinate end, GeneralCharacter c) {
+		npcs.remove(c.getCoordinate());
 		npcs.put(end, c);
 	}
 
@@ -89,7 +88,9 @@ public class Room implements Serializable {
 	public Collision getCollision(Coordinate coord) {
 		if (getCharacterAt(coord) != null)
 			return GeneralObject.Collision.WALL;
-		return getObjectAt(coord).getCollision();
+		if (getObjectAt(coord) != null)
+			return getObjectAt(coord).getCollision();
+		return Collision.NO;
 	}
 
 	/**
@@ -193,7 +194,16 @@ public class Room implements Serializable {
 		}
 
 		for (Entry<Coordinate, GeneralCharacter> entry : npcs.entrySet()) {
-			entry.getValue().draw(g);
+			if (entry != null) {
+				if (entry.getValue() != null) {
+					entry.getValue().draw(g);
+				} else {
+					System.out.println("Value is null.");
+				}
+			} else {
+				System.out.println("Entry is null.");
+			}
+
 		}
 
 		GameBase.getPlayer().draw(g);

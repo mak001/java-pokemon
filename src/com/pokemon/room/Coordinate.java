@@ -80,4 +80,9 @@ public class Coordinate {
 		return x == getX() && y == getY();
 	}
 
+	@Override
+	public String toString() {
+		return "(" + getX() + ", " + getY() + ")";
+	}
+
 }

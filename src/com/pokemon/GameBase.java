@@ -1,15 +1,23 @@
 package com.pokemon;
 
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.game.engine.Game;
 import com.game.engine.GameApp;
 import com.pokemon.Commands.Keys;
 import com.pokemon.loader.GameProperties;
 import com.pokemon.loader.Settings;
+import com.pokemon.room.Coordinate;
 import com.pokemon.room.Room;
+import com.pokemon.room.characters.NPC;
 import com.pokemon.room.characters.Player;
+import com.pokemon.room.objects.Wall;
+import com.pokemon.root.GeneralCharacter;
+import com.pokemon.root.GeneralObject;
 
 public class GameBase extends Game {
 
@@ -25,7 +33,7 @@ public class GameBase extends Game {
 	}
 
 	public GameBase() {
-		title = "PackMan";
+		title = "pokemon";
 		width = 180;
 		w = width;
 		h = height;
@@ -33,6 +41,36 @@ public class GameBase extends Game {
 		renderDelay = 100;
 		over = false;
 		commands = new Commands();
+		player = new Player();
+
+		ConcurrentHashMap<Coordinate, GeneralObject> objects = new ConcurrentHashMap<Coordinate, GeneralObject>() {
+			private static final long serialVersionUID = 1L;
+			{
+
+				put(new Coordinate(0, 0),
+						new Wall(Toolkit.getDefaultToolkit().getImage(
+								getClass().getResource(
+										"/images/room/sailor.png"))));
+			}
+		};
+		ConcurrentHashMap<Coordinate, GeneralCharacter> npcs = new ConcurrentHashMap<Coordinate, GeneralCharacter>() {
+			private static final long serialVersionUID = 1L;
+			{
+				put(new Coordinate(0, 0), new NPC(NPC.Type.SAILOR,
+						new String[] { "mmm", "ggg" },
+						new ArrayList<Coordinate>() {
+							private static final long serialVersionUID = 1L;
+							{
+								add(new Coordinate(0, 0));
+								add(new Coordinate(0, 3));
+								add(new Coordinate(5, 3));
+								add(new Coordinate(5, 0));
+							}
+						}));
+
+			}
+		};
+		room = new Room(objects, npcs);
 	}
 
 	public static int width() {
@@ -68,6 +106,7 @@ public class GameBase extends Game {
 			// TODO
 			break;
 		}
+
 	}
 
 	@Override

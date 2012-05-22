@@ -37,6 +37,10 @@ public abstract class GeneralCharacter implements Serializable {
 		return image;
 	}
 
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
 	/**
 	 * 
 	 * Draws the npc/character
