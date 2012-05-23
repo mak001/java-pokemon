@@ -1,6 +1,7 @@
 package com.pokemon;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -114,7 +115,8 @@ public class GameBase extends Game {
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void render(Graphics g1) {
+		Graphics2D g = (Graphics2D) g1;
 		// TODO Auto-generated method stub
 		room.draw(g);
 	}

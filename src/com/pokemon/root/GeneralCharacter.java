@@ -1,6 +1,6 @@
 package com.pokemon.root;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.Serializable;
 
@@ -48,6 +48,6 @@ public abstract class GeneralCharacter implements Serializable {
 	 * @param g
 	 *            - Graphics
 	 */
-	public abstract void draw(Graphics g);
+	public abstract void draw(Graphics2D g);
 
 }

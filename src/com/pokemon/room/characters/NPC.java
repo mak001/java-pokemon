@@ -1,6 +1,6 @@
 package com.pokemon.room.characters;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class NPC extends GeneralCharacter {
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 
 		if (ticks == delay) {
 

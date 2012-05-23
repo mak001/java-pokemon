@@ -4,7 +4,9 @@ public class Coordinate {
 
 	private int x;
 	private int y;
-	private int offset = 32;
+
+	// Tile width and height
+	private int offset = 16;
 
 	/**
 	 * Initializes the coordinate.
@@ -66,7 +68,7 @@ public class Coordinate {
 	 * @return True if the coordinates have the same x and y
 	 */
 	public boolean isSame(Coordinate coordinate) {
-		return coordinate.getX() == getX() && coordinate.getY() == getY();
+		return isSame(coordinate.getX(), coordinate.getY());
 	}
 
 	/**
@@ -78,6 +80,24 @@ public class Coordinate {
 	 */
 	public boolean isSame(int x, int y) {
 		return x == getX() && y == getY();
+	}
+
+	public boolean isNextTo(Coordinate coordinate) {
+		return isNextTo(coordinate.getX(), coordinate.getY());
+	}
+
+	private boolean isNextTo(int x, int y) {
+		if (getX() == x) {
+			if (Math.abs(getX() - x) == 1)
+				return true;
+			return false;
+		} else if (getY() == y) {
+			if (Math.abs(getX() - x) == 1)
+				return true;
+			return false;
+		}
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override

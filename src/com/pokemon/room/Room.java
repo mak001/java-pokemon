@@ -1,6 +1,6 @@
 package com.pokemon.room;
 
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -185,7 +185,7 @@ public class Room implements Serializable {
 		return null;
 	}
 
-	public void draw(Graphics g) {
+	public void draw(Graphics2D g) {
 		// TODO - change to make it like character drawing? (mainly for pushable
 		// and cuttable objects)
 		for (Entry<Coordinate, GeneralObject> entry : map.entrySet()) {
