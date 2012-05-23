@@ -1,9 +1,13 @@
-Na, just kidding, you don't have to read this.
+I need people to help me split up and rename images.
+
+
+Here are some things when splitting Character(NPC) images:
+- Images must be 25 px tall
+- Images must have the sub images 16 px wide 
+      (so if a Character image has 7 different drawings in it, it needs to be a total of 112 px wide. Each drawing having a 16 px width)
+
+Do not split the Object images yet. I still have to figure out how to load them.
 
 Some notes:
 - Character images are taller than tile images
-- Character images vary in height and width
-      - Usually around 20 px high
-      - Usually 14 to 15 px wide
-
 - Objects/Tile images are 16 X 16 px
