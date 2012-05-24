@@ -86,11 +86,7 @@ public class Room implements Serializable {
 	 * @return The collision type
 	 */
 	public Collision getCollision(Coordinate coord) {
-		if (getCharacterAt(coord) != null)
-			return GeneralObject.Collision.WALL;
-		if (getObjectAt(coord) != null)
-			return getObjectAt(coord).getCollision();
-		return Collision.NO;
+		return getCollision(coord.getX(), coord.getY());
 	}
 
 	/**
@@ -108,7 +104,9 @@ public class Room implements Serializable {
 	public Collision getCollision(int x, int y) {
 		if (getCharacterAt(x, y) != null)
 			return GeneralObject.Collision.WALL;
-		return getObjectAt(x, y).getCollision();
+		if (getObjectAt(x, y) != null)
+			return getObjectAt(x, y).getCollision();
+		return GeneralObject.Collision.NO;
 	}
 
 	/**
@@ -120,12 +118,7 @@ public class Room implements Serializable {
 	 *         no object.
 	 */
 	public GeneralObject getObjectAt(Coordinate c) {
-		for (Entry<Coordinate, GeneralObject> entry : map.entrySet()) {
-			if (entry.getKey().isSame(c)) {
-				return entry.getValue();
-			}
-		}
-		return null;
+		return getObjectAt(c.getX(), c.getY());
 	}
 
 	/**
@@ -137,12 +130,7 @@ public class Room implements Serializable {
 	 *         was no character.
 	 */
 	public GeneralCharacter getCharacterAt(Coordinate c) {
-		for (Entry<Coordinate, GeneralCharacter> entry : npcs.entrySet()) {
-			if (entry.getKey().isSame(c)) {
-				return entry.getValue();
-			}
-		}
-		return null;
+		return getCharacterAt(c.getX(), c.getY());
 	}
 
 	/**

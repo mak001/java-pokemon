@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.pokemon.GameBase;
 import com.pokemon.battle.Pokemon;
 import com.pokemon.room.Coordinate;
+import com.pokemon.root.Animation;
 import com.pokemon.root.GeneralCharacter;
 
 public class NPC extends GeneralCharacter {
@@ -20,6 +21,8 @@ public class NPC extends GeneralCharacter {
 	private ArrayList<Coordinate> path = new ArrayList<Coordinate>();
 	private int current_coord = -1;
 	private Type type;
+
+	private Animation animation;
 
 	private int ticks = 0;
 	private int delay = 20;
@@ -45,6 +48,7 @@ public class NPC extends GeneralCharacter {
 			setCoordinate(path.get(0));
 		}
 		setImage(type);
+		animation = new Animation(getImage());
 	}
 
 	private void setImage(Type type) {
@@ -92,6 +96,14 @@ public class NPC extends GeneralCharacter {
 		return pokemon;
 	}
 
+	public Coordinate getNextInPath() {
+		if (current_coord + 1 == path.size()) {
+			return path.get(0);
+		} else {
+			return path.get(current_coord + 1);
+		}
+	}
+
 	@Override
 	public void draw(Graphics2D g) {
 
@@ -119,9 +131,8 @@ public class NPC extends GeneralCharacter {
 
 	}
 
-	public int getDrawY() { // TODO - write equation to find it, due to varying
-							// Height
-		return getCoordinate().getOffsetY();
+	public int getDrawY() {
+		return getCoordinate().getOffsetY() - 9;
 	}
 
 }

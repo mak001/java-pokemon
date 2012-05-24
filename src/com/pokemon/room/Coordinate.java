@@ -100,6 +100,36 @@ public class Coordinate {
 		return false;
 	}
 
+	public enum Direction {
+		UP, DOWN, LEFT, RIGHT
+	}
+
+	/**
+	 * 
+	 * (0,0) is in the top left
+	 * 
+	 * @param c
+	 *            - The coordinate to compare to
+	 * @return - The direction of the movement (null if the coordinates are not
+	 *         lined up in any way)
+	 */
+	public Direction directionTo(Coordinate c) {
+		if (c.getX() == getX()) {
+			if (c.getX() > getX()) {
+				return Direction.DOWN;
+			} else {
+				return Direction.UP;
+			}
+		} else if (c.getY() == getY()) {
+			if (c.getY() > getY()) {
+				return Direction.RIGHT;
+			} else {
+				return Direction.LEFT;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		return "(" + getX() + ", " + getY() + ")";

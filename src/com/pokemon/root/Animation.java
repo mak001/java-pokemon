@@ -99,6 +99,10 @@ public class Animation {
 				16, 25);
 	}
 
+	public Image getAnimationFrame(int frame) {
+		return ((BufferedImage) image).getSubimage(frame * xOffset, 0, 16, 25);
+	}
+
 	public boolean isReversed() {
 		return reverse;
 	}
