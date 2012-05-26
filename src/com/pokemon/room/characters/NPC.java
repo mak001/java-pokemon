@@ -1,14 +1,16 @@
 package com.pokemon.room.characters;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
-import com.pokemon.GameBase;
+import javax.imageio.ImageIO;
+
 import com.pokemon.battle.Pokemon;
 import com.pokemon.room.Coordinate;
 import com.pokemon.root.Animation;
+import com.pokemon.root.Animation.AnimationType;
 import com.pokemon.root.GeneralCharacter;
 
 public class NPC extends GeneralCharacter {
@@ -26,6 +28,7 @@ public class NPC extends GeneralCharacter {
 
 	private int ticks = 0;
 	private int delay = 20;
+	private int stage;
 
 	public enum Type {
 		PROF_OAK, POLICE, SAILOR, CAPTAIN, ROCKET_MALE, ROCKET_FEMALE,
@@ -63,13 +66,17 @@ public class NPC extends GeneralCharacter {
 		}
 	}
 
-	public Image image(String name, boolean battle) {
-		if (battle)
-			return Toolkit.getDefaultToolkit().getImage(
-					getClass().getResource(
-							"/images/battle/trainers/" + name + ".png"));
-		return Toolkit.getDefaultToolkit().getImage(
-				getClass().getResource("/images/room/" + name + ".png"));
+	public BufferedImage image(String name, boolean battle) {
+		try {
+			if (battle)
+				return ImageIO.read(getClass().getResourceAsStream(
+						"/images/battle/trainers/" + name + ".png"));
+			return ImageIO.read(getClass().getResourceAsStream(
+					"/images/room/" + name + ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public int getSpeechLength() {
@@ -97,42 +104,75 @@ public class NPC extends GeneralCharacter {
 	}
 
 	public Coordinate getNextInPath() {
-		if (current_coord + 1 == path.size()) {
-			return path.get(0);
-		} else {
+		if (current_coord < path.size() - 1) {
 			return path.get(current_coord + 1);
+		} else {
+			return path.get(0);
 		}
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
+		AnimationType at = getAnimType(1, false);
+		if (current_coord != -1) {
+			if (ticks == delay) {
 
-		if (ticks == delay) {
-
-			if (current_coord != -1) { // -1 being that it doesn't have a path
-
-				coordinate = path.get(current_coord);
-
-				GameBase.getRoom().moveCharacterTo(path.get(current_coord),
-						this);
-
-				current_coord++;
-
-				if (current_coord == path.size()) {
-					current_coord = 0;
-				}
-
+				at = getAnimType(1, false);
+				animation.addTick();
+				doCoord();
 				ticks = 0;
 			}
+			ticks++;
 		}
-		g.drawImage(image, coordinate.getOffsetX(), getDrawY(), null);
-		ticks++;
+		animation.draw(g, at, coordinate);
+
 		// TODO Auto-generated method stub
 
 	}
 
-	public int getDrawY() {
-		return getCoordinate().getOffsetY() - 9;
+	private void doCoord() {
+		if (current_coord < path.size() - 1) {
+			current_coord++;
+		} else {
+			current_coord = 0;
+		}
+		coordinate = path.get(current_coord);
+		System.out.println("Coord: " + current_coord);
+
+	}
+
+	private AnimationType getAnimType(int stage, boolean b) {
+		if (!b) {
+			if (stage == 0) {
+				switch (coordinate.directionTo(getNextInPath())) {
+				case DOWN:
+					return AnimationType.DOWN;
+				case UP:
+					return AnimationType.UP;
+				case LEFT:
+					return AnimationType.LEFT;
+				case RIGHT:
+					return AnimationType.RIGHT;
+				default:
+					return AnimationType.DOWN;
+				}
+			} else {
+				switch (coordinate.directionTo(getNextInPath())) {
+				case DOWN:
+					return AnimationType.DOWN_WALKING;
+				case UP:
+					return AnimationType.UP_WALKING;
+				case LEFT:
+					return AnimationType.LEFT_WALKING;
+				case RIGHT:
+					return AnimationType.RIGHT_WALKING;
+				default:
+					return AnimationType.DOWN_WALKING;
+				}
+			}
+		} else {
+			return AnimationType.JUMPING;
+		}
 	}
 
 }

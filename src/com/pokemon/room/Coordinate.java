@@ -62,6 +62,10 @@ public class Coordinate {
 		return offset;
 	}
 
+	public int getCharOffset() {
+		return getOffsetY() - 9;
+	}
+
 	/**
 	 * @param coordinate
 	 *            - The coordinate to check against
@@ -114,19 +118,22 @@ public class Coordinate {
 	 *         lined up in any way)
 	 */
 	public Direction directionTo(Coordinate c) {
-		if (c.getX() == getX()) {
+		if (c.getY() == getY()) {
 			if (c.getX() > getX()) {
+				return Direction.RIGHT;
+			} else {
+				return Direction.LEFT;
+
+			}
+		} else if (c.getX() == getX()) {
+			if (c.getY() > getY()) {
 				return Direction.DOWN;
 			} else {
 				return Direction.UP;
 			}
-		} else if (c.getY() == getY()) {
-			if (c.getY() > getY()) {
-				return Direction.RIGHT;
-			} else {
-				return Direction.LEFT;
-			}
 		}
+		System.out.println("Coords do not line up: (" + getX() + ", " + getY()
+				+ ") ,  (" + c.getX() + ", " + c.getY() + ")");
 		return null;
 	}
 

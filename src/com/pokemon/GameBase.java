@@ -62,10 +62,14 @@ public class GameBase extends Game {
 						new ArrayList<Coordinate>() {
 							private static final long serialVersionUID = 1L;
 							{
-								add(new Coordinate(0, 0));
-								add(new Coordinate(0, 3));
-								add(new Coordinate(5, 3));
-								add(new Coordinate(5, 0));
+								add(new Coordinate(1, 1));
+								add(new Coordinate(1, 2));
+								add(new Coordinate(1, 3));
+								add(new Coordinate(2, 3));
+								add(new Coordinate(3, 3));
+								add(new Coordinate(3, 2));
+								add(new Coordinate(3, 1));
+								add(new Coordinate(2, 1));
 							}
 						}));
 
