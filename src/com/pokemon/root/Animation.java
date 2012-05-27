@@ -3,7 +3,6 @@ package com.pokemon.root;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import com.pokemon.room.Coordinate;
@@ -114,21 +113,13 @@ public class Animation {
 		g.drawImage(getAnimationFrame(frame), x, y, null);
 	}
 
-	/*
-	 * dx1 - the x coordinate of the first corner of the destination rectangle.
-	 * dy1 - the y coordinate of the first corner of the destination rectangle.
-	 * dx2 - the x coordinate of the second corner of the destination rectangle.
-	 * dy2 - the y coordinate of the second corner of the destination rectangle.
-	 * sx1 - the x coordinate of the first corner of the source rectangle. sy1 -
-	 * the y coordinate of the first corner of the source rectangle. sx2 - the x
-	 * coordinate of the second corner of the source rectangle. sy2 - the y
-	 * coordinate of the second corner of the source rectangle. observer -
-	 * object to be notified as more of the image is scaled and converted.
-	 */
-
-	private void drawReverse(Graphics2D g, int frame, int x, int y) {
-		// TODO - figure out how to reverse the image
-		g.drawImage(getAnimationFrame(frame), null, null);
+	private void drawReverse(Graphics2D g, int frame, double x, double y) {
+		// TODO - images jumps to the left when walking up and down
+		AffineTransform at = new AffineTransform();
+		at.setToIdentity();
+		at.translate(x, y);
+		at.scale(-1.0, 1.0);
+		g.drawImage(getAnimationFrame(frame), at, null);
 	}
 
 	public void addTick() {

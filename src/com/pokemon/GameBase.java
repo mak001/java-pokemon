@@ -48,7 +48,7 @@ public class GameBase extends Game {
 			private static final long serialVersionUID = 1L;
 			{
 
-				put(new Coordinate(0, 0),
+				put(new Coordinate(5, 2),
 						new Wall(Toolkit.getDefaultToolkit().getImage(
 								getClass().getResource(
 										"/images/room/sailor.png"))));
@@ -63,12 +63,19 @@ public class GameBase extends Game {
 							private static final long serialVersionUID = 1L;
 							{
 								add(new Coordinate(1, 1));
+
 								add(new Coordinate(1, 2));
+
 								add(new Coordinate(1, 3));
+
 								add(new Coordinate(2, 3));
+
 								add(new Coordinate(3, 3));
+
 								add(new Coordinate(3, 2));
+
 								add(new Coordinate(3, 1));
+
 								add(new Coordinate(2, 1));
 							}
 						}));
