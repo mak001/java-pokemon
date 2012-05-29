@@ -23,12 +23,12 @@ public class NPC extends GeneralCharacter {
 	private ArrayList<Coordinate> path = new ArrayList<Coordinate>();
 	private int current_coord = -1;
 	private Type type;
+	private boolean jumping;
 
 	private Animation animation;
 
 	private int ticks = 0;
 	private int delay = 20;
-	private int stage;
 
 	public enum Type {
 		PROF_OAK, POLICE, SAILOR, CAPTAIN, ROCKET_MALE, ROCKET_FEMALE,
@@ -64,6 +64,14 @@ public class NPC extends GeneralCharacter {
 			break;
 
 		}
+	}
+
+	public void setJumping(boolean jumping) {
+		this.jumping = jumping;
+	}
+
+	public boolean getJumping() {
+		return this.jumping;
 	}
 
 	public BufferedImage image(String name, boolean battle) {
@@ -111,21 +119,35 @@ public class NPC extends GeneralCharacter {
 		}
 	}
 
+	public Coordinate getPreviousInPath() {
+		if (current_coord == 0) {
+			return path.get(path.size() - 1);
+		} else {
+			return path.get(current_coord - 1);
+		}
+	}
+
 	@Override
 	public void draw(Graphics2D g) {
-		AnimationType at = getAnimType(1, false);
+		boolean b = coordinate.isCorner(getPreviousInPath(), getNextInPath());
+		int tempTicks = 0;
+		if (b) {
+			tempTicks = ticks;
+		} else {
+			tempTicks = ticks * 4;
+		}
+		AnimationType at = getAnimType(b, false);
 		if (current_coord != -1) {
-			if (ticks == delay) {
+			if (tempTicks == delay) {
 
-				at = getAnimType(1, false);
+				at = getAnimType(b, false);
 				animation.addTick();
 				doCoord();
 				ticks = 0;
 			}
-			ticks++;
 		}
 		animation.draw(g, at, coordinate);
-
+		ticks++;
 		// TODO Auto-generated method stub
 
 	}
@@ -141,9 +163,9 @@ public class NPC extends GeneralCharacter {
 
 	}
 
-	private AnimationType getAnimType(int stage, boolean b) {
+	private AnimationType getAnimType(boolean standing, boolean b) {
 		if (!b) {
-			if (stage == 0) {
+			if (standing) {
 				switch (coordinate.directionTo(getNextInPath())) {
 				case DOWN:
 					return AnimationType.DOWN;
@@ -174,5 +196,4 @@ public class NPC extends GeneralCharacter {
 			return AnimationType.JUMPING;
 		}
 	}
-
 }

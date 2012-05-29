@@ -142,4 +142,11 @@ public class Coordinate {
 		return "(" + getX() + ", " + getY() + ")";
 	}
 
+	public boolean isCorner(Coordinate previous, Coordinate next) {
+		if (previous.getX() != next.getX() && previous.getY() != next.getY()) {
+			return true;
+		}
+		return false;
+	}
+
 }

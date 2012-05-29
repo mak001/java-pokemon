@@ -54,7 +54,7 @@ public class Animation {
 					coordinate.getCharOffset());
 			break;
 		case RIGHT:
-			drawNormal(g, 2, coordinate.getOffsetX(),
+			drawReverse(g, 2, coordinate.getOffsetX(),
 					coordinate.getCharOffset());
 			break;
 		case RIGHT_WALKING:
@@ -117,16 +117,16 @@ public class Animation {
 		// TODO - images jumps to the left when walking up and down
 		AffineTransform at = new AffineTransform();
 		at.setToIdentity();
-		at.translate(x, y);
+		at.translate(x + 16, y);
 		at.scale(-1.0, 1.0);
 		g.drawImage(getAnimationFrame(frame), at, null);
 	}
 
 	public void addTick() {
-		if (walking == 0) {
-			walking++;
-		} else {
+		if (walking == 2) {
 			walking = 0;
+		} else {
+			walking++;
 		}
 	}
 
