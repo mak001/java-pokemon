@@ -54,7 +54,7 @@ public class GameScreen extends AbstractScreen {
 					/ getScale(), Gdx.graphics.getHeight() / getScale());
 			renderer.camera.update();
 			batch.setProjectionMatrix(renderer.camera.combined);
-			
+
 			for (AbstractHud hud : huds.values()) {
 				hud.render();
 			}
@@ -84,7 +84,12 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	public void addHud(AbstractHud hud) {
-		huds.put(huds.keys().size(), hud);
+		if (huds.containsKey(PAUSE_HUD)) {
+			huds.put(huds.keys().size(), hud);
+		} else {
+			// to avoid using space 0
+			huds.put(huds.keys().size() + 1, hud);
+		}
 	}
 
 	public void removeHud(AbstractHud hud) {

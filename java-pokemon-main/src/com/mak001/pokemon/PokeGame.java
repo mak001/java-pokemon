@@ -4,15 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.Peripheral;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.utils.Json;
-import com.mak001.pokemon.control.InputHandler;
-import com.mak001.pokemon.control.controllers.Control;
+import com.mak001.pokemon.control.Control;
+import com.mak001.pokemon.control.Control.GameBoyButton;
+import com.mak001.pokemon.control.Control.Input;
+import com.mak001.pokemon.control.handlers.InputHandler;
 import com.mak001.pokemon.screens.SplashScreen;
 
 public class PokeGame extends Game {
-
-	private FPSLogger fpsLogger;
 
 	public static int TILE_DIMENSION = 16;
 	public static int CHAR_HEIGHT = 32;
@@ -34,14 +33,29 @@ public class PokeGame extends Game {
 
 	@Override
 	public void create() {
-		controls = new Control(Keys.W, Keys.S, Keys.A, Keys.D, Keys.ENTER,
-				Keys.APOSTROPHE, Keys.SPACE, Keys.B, Keys.E, Keys.Q);
-		// controls.save();
-		Json json = new Json();
-		controls = json.fromJson(Control.class,
-				Gdx.files.external("Desktop/controls.json"));
+		controls = new Control();
+		controls.updateButton(GameBoyButton.A_BUTTON, Input.KEYBOARD,
+				Keys.SPACE);
+		controls.updateButton(GameBoyButton.B_BUTTON, Input.KEYBOARD, Keys.B);
+		controls.updateButton(GameBoyButton.D_PAD_UP, Input.KEYBOARD, Keys.W);
+		controls.updateButton(GameBoyButton.D_PAD_LEFT, Input.KEYBOARD, Keys.A);
+		controls.updateButton(GameBoyButton.D_PAD_RIGHT, Input.KEYBOARD, Keys.D);
+		controls.updateButton(GameBoyButton.D_PAD_DOWN, Input.KEYBOARD, Keys.S);
+		controls.updateButton(GameBoyButton.RIGHT_BUTTON, Input.KEYBOARD,
+				Keys.E);
+		controls.updateButton(GameBoyButton.LEFT_BUTTON, Input.KEYBOARD, Keys.Q);
+		controls.updateButton(GameBoyButton.START_BUTTON, Input.KEYBOARD,
+				Keys.ENTER);
+		controls.updateButton(GameBoyButton.SELECT_BUTTON, Input.KEYBOARD,
+				Keys.APOSTROPHE);
+
+		controls.save();
+
+		// Json json = new Json();
+		// controls = json.fromJson(Control.class,
+		// Gdx.files.external("Desktop/controls.json"));
+
 		setScreen(getSplashScreen());
-		fpsLogger = new FPSLogger();
 
 		handler = new InputHandler();
 
@@ -62,6 +76,7 @@ public class PokeGame extends Game {
 	public void render() {
 		super.render();
 
+		// Only because there is no built in accelerometer listener
 		if (has_a) {
 			if (a_x != Gdx.input.getAccelerometerX()) {
 				handler.accelerometerXChanged(Gdx.input.getAccelerometerX());
@@ -76,8 +91,6 @@ public class PokeGame extends Game {
 				a_z = Gdx.input.getAccelerometerZ();
 			}
 		}
-
-		// fpsLogger.log();
 	}
 
 	@Override

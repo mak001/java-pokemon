@@ -1,14 +1,15 @@
-package com.mak001.pokemon.control;
+package com.mak001.pokemon.control.handlers;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.math.Vector3;
-
 import com.mak001.pokemon.PokeGame;
+import com.mak001.pokemon.control.AccelerometerListener;
+import com.mak001.pokemon.control.Control.GameBoyButton;
+import com.mak001.pokemon.control.Control.Input;
 import com.mak001.pokemon.world.World;
 import com.mak001.pokemon.world.entity.Direction;
 
@@ -22,25 +23,32 @@ public class InputHandler implements InputProcessor, ControllerListener,
 
 	public void setWorld(World world) {
 		this.world = world;
+
+		// need this or it won't process events (even if set somewhere else)
 		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
 		if (world != null) {
-			if (keycode == PokeGame.controls.move_up) {
+			if (keycode == PokeGame.controls.getValue(GameBoyButton.D_PAD_UP,
+					Input.KEYBOARD)) {
 				if (!world.screen.isPaused())
 					world.getPlayer().setMovement(true, Direction.UP);
-			} else if (keycode == PokeGame.controls.move_down) {
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.D_PAD_DOWN, Input.KEYBOARD)) {
 				if (!world.screen.isPaused())
 					world.getPlayer().setMovement(true, Direction.DOWN);
-			} else if (keycode == PokeGame.controls.move_left) {
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.D_PAD_LEFT, Input.KEYBOARD)) {
 				if (!world.screen.isPaused())
 					world.getPlayer().setMovement(true, Direction.LEFT);
-			} else if (keycode == PokeGame.controls.move_right) {
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.D_PAD_RIGHT, Input.KEYBOARD)) {
 				if (!world.screen.isPaused())
 					world.getPlayer().setMovement(true, Direction.RIGHT);
-			} else if (keycode == PokeGame.controls.start_button) {
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.START_BUTTON, Input.KEYBOARD)) {
 				world.screen.setPaused();
 			}
 			// TODO Auto-generated method stub
@@ -51,19 +59,18 @@ public class InputHandler implements InputProcessor, ControllerListener,
 	@Override
 	public boolean keyUp(int keycode) {
 		if (world != null) {
-			switch (keycode) {
-			case Keys.W:
+			if (keycode == PokeGame.controls.getValue(GameBoyButton.D_PAD_UP,
+					Input.KEYBOARD)) {
 				world.getPlayer().setMovement(false, Direction.UP);
-				break;
-			case Keys.S:
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.D_PAD_DOWN, Input.KEYBOARD)) {
 				world.getPlayer().setMovement(false, Direction.DOWN);
-				break;
-			case Keys.A:
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.D_PAD_LEFT, Input.KEYBOARD)) {
 				world.getPlayer().setMovement(false, Direction.LEFT);
-				break;
-			case Keys.D:
+			} else if (keycode == PokeGame.controls.getValue(
+					GameBoyButton.D_PAD_RIGHT, Input.KEYBOARD)) {
 				world.getPlayer().setMovement(false, Direction.RIGHT);
-				break;
 			}
 		}
 		return true;

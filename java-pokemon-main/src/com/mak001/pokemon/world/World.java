@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
-import com.mak001.pokemon.control.InputHandler;
+import com.mak001.pokemon.control.handlers.InputHandler;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
