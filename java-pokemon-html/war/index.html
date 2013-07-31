@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<title>java-pokemon</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style>
+canvas {
+	cursor: default;
+	outline: none;
+}
+</style>
+</head>
+
+<body style="background-color: black">
+	<div align="center" id="embed-com.mak001.pokemon.GwtDefinition"></div>
+	<script type="text/javascript"
+		src="com.mak001.pokemon.GwtDefinition/com.mak001.pokemon.GwtDefinition.nocache.js"></script>
+</body>
+
+<script>
+	function handleMouseDown(evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		evt.target.style.cursor = 'default';
+	}
+
+	function handleMouseUp(evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		evt.target.style.cursor = '';
+	}
+
+	document.getElementById('embed-com.mak001.pokemon.GwtDefinition')
+			.addEventListener('mousedown', handleMouseDown, false);
+	document.getElementById('embed-com.mak001.pokemon.GwtDefinition')
+			.addEventListener('mouseup', handleMouseUp, false);
+</script>
+</html>

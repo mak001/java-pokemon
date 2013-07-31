@@ -1,0 +1,54 @@
+
+player.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+player.down
+  rotate: false
+  xy: 1, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+player.down.walking
+  rotate: false
+  xy: 19, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+player.left
+  rotate: false
+  xy: 37, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+player.left.walking.1
+  rotate: false
+  xy: 55, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+player.left.walking.2
+  rotate: false
+  xy: 73, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+player.up
+  rotate: false
+  xy: 91, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+player.up.walking
+  rotate: false
+  xy: 109, 0
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
