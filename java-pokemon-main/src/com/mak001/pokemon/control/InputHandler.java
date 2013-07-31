@@ -1,6 +1,7 @@
 package com.mak001.pokemon.control;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
@@ -16,50 +17,54 @@ public class InputHandler implements InputProcessor, ControllerListener,
 
 	private World world;
 
-	public InputHandler(World world) {
-		this.world = world;
+	public InputHandler() {
 	}
 
 	public void setWorld(World world) {
 		this.world = world;
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == PokeGame.controls.move_up) {
-			if (!world.screen.isPaused())
-				world.getPlayer().setMovement(true, Direction.UP);
-		} else if (keycode == PokeGame.controls.move_down) {
-			if (!world.screen.isPaused())
-				world.getPlayer().setMovement(true, Direction.DOWN);
-		} else if (keycode == PokeGame.controls.move_left) {
-			if (!world.screen.isPaused())
-				world.getPlayer().setMovement(true, Direction.LEFT);
-		} else if (keycode == PokeGame.controls.move_right) {
-			if (!world.screen.isPaused())
-				world.getPlayer().setMovement(true, Direction.RIGHT);
-		} else if (keycode == PokeGame.controls.start_button) {
-			world.screen.setPaused();
+		if (world != null) {
+			if (keycode == PokeGame.controls.move_up) {
+				if (!world.screen.isPaused())
+					world.getPlayer().setMovement(true, Direction.UP);
+			} else if (keycode == PokeGame.controls.move_down) {
+				if (!world.screen.isPaused())
+					world.getPlayer().setMovement(true, Direction.DOWN);
+			} else if (keycode == PokeGame.controls.move_left) {
+				if (!world.screen.isPaused())
+					world.getPlayer().setMovement(true, Direction.LEFT);
+			} else if (keycode == PokeGame.controls.move_right) {
+				if (!world.screen.isPaused())
+					world.getPlayer().setMovement(true, Direction.RIGHT);
+			} else if (keycode == PokeGame.controls.start_button) {
+				world.screen.setPaused();
+			}
+			// TODO Auto-generated method stub
 		}
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		switch (keycode) {
-		case Keys.W:
-			world.getPlayer().setMovement(false, Direction.UP);
-			break;
-		case Keys.S:
-			world.getPlayer().setMovement(false, Direction.DOWN);
-			break;
-		case Keys.A:
-			world.getPlayer().setMovement(false, Direction.LEFT);
-			break;
-		case Keys.D:
-			world.getPlayer().setMovement(false, Direction.RIGHT);
-			break;
+		if (world != null) {
+			switch (keycode) {
+			case Keys.W:
+				world.getPlayer().setMovement(false, Direction.UP);
+				break;
+			case Keys.S:
+				world.getPlayer().setMovement(false, Direction.DOWN);
+				break;
+			case Keys.A:
+				world.getPlayer().setMovement(false, Direction.LEFT);
+				break;
+			case Keys.D:
+				world.getPlayer().setMovement(false, Direction.RIGHT);
+				break;
+			}
 		}
 		return true;
 	}

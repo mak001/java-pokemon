@@ -2,12 +2,12 @@ package com.mak001.pokemon;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.utils.Json;
 import com.mak001.pokemon.control.InputHandler;
 import com.mak001.pokemon.control.controllers.Control;
-import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.screens.SplashScreen;
 
 public class PokeGame extends Game {
@@ -20,7 +20,6 @@ public class PokeGame extends Game {
 	public final static String MUSIC = "data/sound/music/";
 
 	public static InputHandler handler;
-	public static GameScreen gameScreen;
 
 	public static Control controls;
 
@@ -35,15 +34,16 @@ public class PokeGame extends Game {
 
 	@Override
 	public void create() {
+		controls = new Control(Keys.W, Keys.S, Keys.A, Keys.D, Keys.ENTER,
+				Keys.APOSTROPHE, Keys.SPACE, Keys.B, Keys.E, Keys.Q);
+		// controls.save();
 		Json json = new Json();
 		controls = json.fromJson(Control.class,
 				Gdx.files.external("Desktop/controls.json"));
 		setScreen(getSplashScreen());
 		fpsLogger = new FPSLogger();
 
-		gameScreen = new GameScreen(this);
-		handler = new InputHandler(gameScreen.renderer.world);
-		Gdx.input.setInputProcessor(handler);
+		handler = new InputHandler();
 
 		has_a = Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer);
 		if (has_a) {

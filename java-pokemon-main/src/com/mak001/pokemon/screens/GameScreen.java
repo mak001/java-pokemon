@@ -5,14 +5,18 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
+import com.mak001.pokemon.screens.huds.AbstractHud;
+import com.mak001.pokemon.screens.huds.PauseHud;
 import com.mak001.pokemon.world.World;
 import com.mak001.pokemon.world.WorldRenderer;
+import com.mak001.utils.OrganizedMap;
 
 public class GameScreen extends AbstractScreen {
 
 	public WorldRenderer renderer;
-	private boolean paused;
-	private PauseScreen pauseScreen;
+	private boolean paused = false;
+	private final int PAUSE_HUD = 0;
+	private OrganizedMap<Integer, AbstractHud> huds;
 	private SpriteBatch batch;
 	private int width;
 	private int height;
@@ -22,14 +26,15 @@ public class GameScreen extends AbstractScreen {
 	public GameScreen(PokeGame game) {
 		super(game);
 		batch = new SpriteBatch();
-		renderer = new WorldRenderer(
-				new World(this, new Vector2(6, 7), "test"), this);
-		pauseScreen = new PauseScreen(this);
+		setWorld(new World(this, new Vector2(6, 7), "test"));
+		huds = new OrganizedMap<Integer, AbstractHud>();
 	}
 
 	public void setWorld(World world) {
-		this.renderer.dispose();
+		if (renderer != null)
+			this.renderer.dispose();
 		this.renderer = new WorldRenderer(world, this);
+		PokeGame.handler.setWorld(world);
 	}
 
 	@Override
@@ -42,9 +47,19 @@ public class GameScreen extends AbstractScreen {
 		renderer.render();
 		if (!paused) {
 			renderer.update();
-		} else {
-			pauseScreen.render();
 		}
+
+		if (huds.size() != 0) {
+			renderer.camera.setToOrtho(false, Gdx.graphics.getWidth()
+					/ getScale(), Gdx.graphics.getHeight() / getScale());
+			renderer.camera.update();
+			batch.setProjectionMatrix(renderer.camera.combined);
+			
+			for (AbstractHud hud : huds.values()) {
+				hud.render();
+			}
+		}
+
 		// TODO - pause screen
 		batch.end();
 	}
@@ -53,15 +68,28 @@ public class GameScreen extends AbstractScreen {
 	public void resize(int width, int height) {
 		this.width = width;
 		this.height = height;
-		renderer.resize(width, height);
+		if (renderer != null)
+			renderer.resize(width, height);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
 		renderer.dispose();
-		pauseScreen.dispose();
+		for (AbstractHud hud : huds.values()) {
+			hud.dispose();
+		}
+		huds.clear();
 		batch.dispose();
+	}
+
+	public void addHud(AbstractHud hud) {
+		huds.put(huds.keys().size(), hud);
+	}
+
+	public void removeHud(AbstractHud hud) {
+		hud.dispose();
+		huds.removeByValue(hud);
 	}
 
 	public void pause() {
@@ -74,6 +102,11 @@ public class GameScreen extends AbstractScreen {
 
 	public void setPaused() {
 		paused = !paused;
+		if (paused) {
+			huds.put(PAUSE_HUD, new PauseHud(this));
+		} else {
+			huds.remove(PAUSE_HUD);
+		}
 	}
 
 	public boolean isPaused() {
@@ -86,6 +119,7 @@ public class GameScreen extends AbstractScreen {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+		System.out.println(scale);
 	}
 
 	public SpriteBatch getBatch() {
