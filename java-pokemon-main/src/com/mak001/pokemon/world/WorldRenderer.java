@@ -71,7 +71,7 @@ public class WorldRenderer implements Disposable {
 
 		world.getPlayer().render(batch);
 
-		for (Entity npc : world.getEntities()) {
+		for (Entity npc : world.getNPCs()) {
 			npc.render(batch);
 		}
 

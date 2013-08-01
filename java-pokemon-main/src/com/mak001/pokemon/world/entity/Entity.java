@@ -1,48 +1,38 @@
 package com.mak001.pokemon.world.entity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+
 import com.mak001.pokemon.PokeGame;
+import com.mak001.pokemon.world.Collision;
 import com.mak001.pokemon.world.Locatable;
+import com.mak001.pokemon.world.World;
 
 public abstract class Entity extends Locatable implements Disposable {
 
 	protected Direction direction;
-	protected Speed speed;
 	private boolean moved = false;
 	private boolean moved_ = false;
 	protected String generic_name;
 
-	private ArrayList<String> interactionText;
-
 	public TextureAtlas atlas;
 	private HashMap<String, AtlasRegion> regions;
 
-	public Entity(Vector2 position, Texture texture, String generic_name) {
-		this(Direction.UP, position, texture, generic_name);
+	public Entity(Vector2 position, String generic_name, World world) {
+		this(Direction.UP, position, generic_name, world);
 	}
 
-	public Entity(Direction direction, Vector2 position, Texture texture,
-			String generic_name) {
-		this(Speed.STILL, direction, position, texture, null, generic_name);
-	}
-
-	public Entity(Speed speed, Direction direction, Vector2 position,
-			Texture texture, ArrayList<String> interactionText,
-			String generic_name) {
-		super(position);
-		this.speed = speed;
+	public Entity(Direction direction, Vector2 position, String generic_name,
+			World world) {
+		super(position, world);
 		this.direction = direction;
 		this.generic_name = generic_name;
-
-		this.interactionText = interactionText;
 
 		regions = new HashMap<String, AtlasRegion>();
 		atlas = new TextureAtlas("data/textures/entities/" + generic_name
@@ -88,14 +78,6 @@ public abstract class Entity extends Locatable implements Disposable {
 		regions.put("right.walking.2", rightW2);
 	}
 
-	public ArrayList<String> getInteractions() {
-		return interactionText;
-	}
-
-	public String getInteraction(int i) {
-		return interactionText.get(i);
-	}
-
 	@Override
 	public void dispose() {
 		regions.clear();
@@ -104,10 +86,6 @@ public abstract class Entity extends Locatable implements Disposable {
 
 	public void update() {
 		// TODO
-	}
-
-	public Speed getSpeed() {
-		return speed;
 	}
 
 	public Direction getDirection() {
@@ -190,6 +168,44 @@ public abstract class Entity extends Locatable implements Disposable {
 			}
 		}
 		return regions.get("up");
+	}
+
+	protected boolean isBlocked(int i, Direction d) {
+		if (d.equals(Direction.DOWN))
+			return i == Collision.WALL.getType();
+		return i == Collision.WALL.getType() || i == Collision.CLIFF.getType();
+	}
+
+	protected boolean isBlocked(float x, float f, Direction d) {
+		return isBlocked(getCollision((int) x, (int) f), d);
+	}
+
+	protected int getCollision(int x, int y) {// TODO- test
+		if (world.getCollision().getCell(x, y) == null) {
+			for (NPC npc : world.getNPCs()) {
+				if (!npc.getBounds().equals(bounds)) {
+					if (npc.getBounds().contains(x, y))
+						return Collision.WALL.getType();
+				}
+			}
+			return Collision.NONE.getType();
+		} else {
+			TextureRegion r = world.getCollision().getCell(x, y).getTile()
+					.getTextureRegion();
+
+			if (Collision.WALL.equals(r)) {
+				return Collision.WALL.getType();
+
+			} else if (Collision.DOOR.equals(r)) {
+				return Collision.DOOR.getType();
+
+			} else if (Collision.CLIFF.equals(r)) {
+				return Collision.CLIFF.getType();
+
+			} else {
+				return Collision.NONE.getType();
+			}
+		}
 	}
 
 	public void render(SpriteBatch batch) {

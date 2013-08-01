@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.TweenSprite;
 
@@ -34,7 +35,7 @@ public class SplashScreen extends AbstractScreen {
 		sound = Gdx.audio.newSound(Gdx.files.internal(PokeGame.SOUND_EFFECTS
 				+ "pokemon-recovery.mp3"));
 
-		sound.play(1.0f);
+		sound.play(GlobalVars.effects_sound_level);
 
 		splashTexture = new Texture(Gdx.files.internal("data/libgdx.png"));
 		splashTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);

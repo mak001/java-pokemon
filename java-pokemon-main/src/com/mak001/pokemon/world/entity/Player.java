@@ -1,7 +1,5 @@
 package com.mak001.pokemon.world.entity;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.world.Collision;
@@ -13,17 +11,12 @@ public class Player extends Entity {
 	private boolean shouldMove_2;
 	private Direction temp = null;
 
-	private World world;
-
 	public Player(Direction direction, int x, int y, World world) {
 		this(direction, new Vector2(x, y), world);
 	}
 
 	public Player(Direction direction, Vector2 position, World world) {
-		super(direction, position, new Texture(
-				"data/textures/entities/player.png"), "player");
-		this.world = world;
-		// TODO Auto-generated constructor stub
+		super(direction, position, "player", world);
 	}
 
 	public void updateDirection(Direction d) {
@@ -96,7 +89,6 @@ public class Player extends Entity {
 	}
 
 	public void setMovement(boolean movement, Direction direction) {
-		// TODO Auto-generated method stub
 		if (direction.equals(getDirection()))
 			shouldMove_2 = movement;
 
@@ -119,38 +111,6 @@ public class Player extends Entity {
 
 	private boolean isDoor(float x, float y) {
 		return isDoor(getCollision((int) x, (int) y));
-	}
-
-	private boolean isBlocked(int i, Direction d) {
-		if (d.equals(Direction.DOWN))
-			return i == Collision.WALL.getType();
-		return i == Collision.WALL.getType() || i == Collision.CLIFF.getType();
-	}
-
-	private boolean isBlocked(float x, float f, Direction d) {
-		return isBlocked(getCollision((int) x, (int) f), d);
-	}
-
-	private int getCollision(int x, int y) {
-		if (world.getCollision().getCell(x, y) == null) {
-			return Collision.NONE.getType();
-		} else {
-			TextureRegion r = world.getCollision().getCell(x, y).getTile()
-					.getTextureRegion();
-
-			if (Collision.WALL.equals(r)) {
-				return Collision.WALL.getType();
-
-			} else if (Collision.DOOR.equals(r)) {
-				return Collision.DOOR.getType();
-
-			} else if (Collision.CLIFF.equals(r)) {
-				return Collision.CLIFF.getType();
-
-			} else {
-				return Collision.NONE.getType();
-			}
-		}
 	}
 
 	public void setPosition(int x, int y) {

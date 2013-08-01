@@ -12,7 +12,7 @@ import com.mak001.pokemon.control.AccelerometerListener;
 import com.mak001.pokemon.control.Control.GameBoyButton;
 import com.mak001.pokemon.control.Control.Input;
 import com.mak001.pokemon.control.controllers.XperiaGamepad;
-import com.mak001.pokemon.screens.huds.ControllerConnectedHud;
+import com.mak001.pokemon.screens.huds.ControllerHud;
 import com.mak001.pokemon.world.World;
 import com.mak001.pokemon.world.entity.Direction;
 
@@ -162,19 +162,20 @@ public class InputHandler implements InputProcessor, ControllerListener,
 
 	@Override
 	public void connected(Controller controller) {
-		world.screen.addHud(new ControllerConnectedHud(controller,
-				world.screen, 500));
+		world.screen.addHud(new ControllerHud(controller, world.screen, 500,
+				true));
 	}
 
 	@Override
 	public void disconnected(Controller controller) {
+		world.screen.addHud(new ControllerHud(controller, world.screen, 500,
+				false));
 	}
 
 	@Override
 	public boolean buttonDown(Controller controller, int buttonIndex) {
 		if (getControllerType(controller).equals(Input.XBOX_CONTROLLER)) {
-			world.screen.addHud(new ControllerConnectedHud(controller,
-					world.screen, 500));
+
 		}
 		return true;
 	}

@@ -14,17 +14,17 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
-import com.mak001.pokemon.control.handlers.InputHandler;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
+import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
 
 public class World {
 
 	public GameScreen screen;
 	private Player player;
-	private ArrayList<Entity> npcs;
+	private ArrayList<NPC> npcs;
 	private TiledMap map;
 	private TiledMapTileLayer collision;
 	private Music music;
@@ -34,23 +34,36 @@ public class World {
 	private Sound doorOpen;
 
 	public World(GameScreen screen, Vector2 player_pos, String map_name) {
-		this(screen, player_pos, new ArrayList<Entity>(), map_name);
+		this(screen, player_pos, new ArrayList<NPC>(), map_name);
 	}
 
 	public World(GameScreen screen, int player_x, int player_y, String map_name) {
-		this(screen, player_x, player_y, new ArrayList<Entity>(), map_name);
+		this(screen, player_x, player_y, new ArrayList<NPC>(), map_name);
 	}
 
-	public World(GameScreen screen, Vector2 player_pos, ArrayList<Entity> npcs,
+	public World(GameScreen screen, Vector2 player_pos, ArrayList<NPC> npcs,
 			String map_name) {
 		this(screen, (int) player_pos.x, (int) player_pos.y,
-				new ArrayList<Entity>(), map_name);
+				new ArrayList<NPC>(), map_name);
 	}
 
 	public World(GameScreen screen, int player_x, int player_y,
-			ArrayList<Entity> npcs, String map_name) {
+			ArrayList<NPC> npcs, String map_name) {
 		this.screen = screen;
-		this.npcs = npcs;
+		this.npcs = new ArrayList<NPC>() {
+			private static final long serialVersionUID = 1L;
+			{
+				add(new NPC(Direction.UP, new ArrayList<Vector2>() {
+					private static final long serialVersionUID = 1L;
+					{
+						add(new Vector2(10, 10));
+						add(new Vector2(12, 10));
+						add(new Vector2(12, 12));
+						add(new Vector2(10, 12));
+					}
+				}, World.this, "player", "player"));
+			}
+		};
 		this.map_name = map_name;
 
 		doorOpen = Gdx.audio.newSound(Gdx.files.internal(PokeGame.SOUND_EFFECTS
@@ -95,7 +108,7 @@ public class World {
 		doorOpen.dispose();
 	}
 
-	public ArrayList<Entity> getEntities() {
+	public ArrayList<NPC> getNPCs() {
 		return npcs;
 	}
 
