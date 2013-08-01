@@ -4,10 +4,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.Peripheral;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.utils.Json;
 import com.mak001.pokemon.control.Control;
 import com.mak001.pokemon.control.Control.GameBoyButton;
 import com.mak001.pokemon.control.Control.Input;
+import com.mak001.pokemon.control.controllers.XBoxController;
 import com.mak001.pokemon.control.handlers.InputHandler;
 import com.mak001.pokemon.screens.SplashScreen;
 
@@ -17,6 +19,8 @@ public class PokeGame extends Game {
 	public static int CHAR_HEIGHT = 32;
 	public final static String SOUND_EFFECTS = "data/sound/effects/";
 	public final static String MUSIC = "data/sound/music/";
+
+	public static boolean no_external_controller;
 
 	public static InputHandler handler;
 
@@ -33,6 +37,10 @@ public class PokeGame extends Game {
 
 	@Override
 	public void create() {
+		no_external_controller = !Gdx.input
+				.isPeripheralAvailable(Peripheral.HardwareKeyboard)
+				&& Controllers.getControllers().size == 0;
+
 		controls = new Control();
 		controls.updateButton(GameBoyButton.A_BUTTON, Input.KEYBOARD,
 				Keys.SPACE);
@@ -49,7 +57,28 @@ public class PokeGame extends Game {
 		controls.updateButton(GameBoyButton.SELECT_BUTTON, Input.KEYBOARD,
 				Keys.APOSTROPHE);
 
-		controls.save();
+		controls.updateButton(GameBoyButton.A_BUTTON, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_A);
+		controls.updateButton(GameBoyButton.B_BUTTON, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_X);
+		controls.updateButton(GameBoyButton.D_PAD_UP, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_DPAD_UP);
+		controls.updateButton(GameBoyButton.D_PAD_LEFT, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_DPAD_LEFT);
+		controls.updateButton(GameBoyButton.D_PAD_RIGHT, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_DPAD_RIGHT);
+		controls.updateButton(GameBoyButton.D_PAD_DOWN, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_DPAD_DOWN);
+		controls.updateButton(GameBoyButton.RIGHT_BUTTON,
+				Input.XBOX_CONTROLLER, XBoxController.BUTTON_RB);
+		controls.updateButton(GameBoyButton.LEFT_BUTTON, Input.XBOX_CONTROLLER,
+				XBoxController.BUTTON_LB);
+		controls.updateButton(GameBoyButton.START_BUTTON,
+				Input.XBOX_CONTROLLER, XBoxController.BUTTON_START);
+		controls.updateButton(GameBoyButton.SELECT_BUTTON,
+				Input.XBOX_CONTROLLER, XBoxController.BUTTON_BACK);
+
+		// controls.save();
 
 		// Json json = new Json();
 		// controls = json.fromJson(Control.class,

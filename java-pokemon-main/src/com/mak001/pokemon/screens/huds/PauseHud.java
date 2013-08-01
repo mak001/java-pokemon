@@ -11,6 +11,7 @@ import com.mak001.pokemon.screens.GameScreen;
 
 public class PauseHud extends AbstractHud {
 
+	private GameScreen screen;
 	private NinePatch patch;
 	public String[] options;
 	private TextureAtlas atlas;
@@ -19,7 +20,9 @@ public class PauseHud extends AbstractHud {
 	private Skin skin;
 
 	public PauseHud(GameScreen gameScreen) {
-		super(gameScreen);
+		super(gameScreen.getBatch());
+
+		screen = gameScreen;
 
 		if (!GlobalVars.hasPokedex) {
 			options = new String[] { "Bag", GlobalVars.playerName, "Map",
@@ -39,7 +42,8 @@ public class PauseHud extends AbstractHud {
 		// list = new List(options, skin);
 	}
 
-	public void render() {
+	@Override
+	public void render(float delat) {
 		/*----Start rendering here----*/
 
 		float width = 70;

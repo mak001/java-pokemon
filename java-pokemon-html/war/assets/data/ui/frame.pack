@@ -1,0 +1,13 @@
+
+frame.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+frame
+  rotate: false
+  xy: 1, 1
+  size: 26, 26
+  split: 10, 10, 10, 11
+  orig: 26, 26
+  offset: 0, 0
+  index: -1

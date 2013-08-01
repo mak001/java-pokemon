@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.huds.AbstractHud;
 import com.mak001.pokemon.screens.huds.PauseHud;
+import com.mak001.pokemon.utils.OrganizedMap;
 import com.mak001.pokemon.world.World;
 import com.mak001.pokemon.world.WorldRenderer;
-import com.mak001.utils.OrganizedMap;
 
 public class GameScreen extends AbstractScreen {
 
@@ -41,6 +41,8 @@ public class GameScreen extends AbstractScreen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		AbstractHud[] toRemove = new AbstractHud[10];
+		int currIndex = 0;
 
 		batch.begin();
 
@@ -56,12 +58,24 @@ public class GameScreen extends AbstractScreen {
 			batch.setProjectionMatrix(renderer.camera.combined);
 
 			for (AbstractHud hud : huds.values()) {
-				hud.render();
+				hud.render(delta);
+				if (hud.getNeededCycles() != -1) {
+					hud.currentCycles++;
+				}
+				if (hud.currentCycles == hud.getNeededCycles()) {
+					toRemove[currIndex] = hud;
+					currIndex++;
+				}
 			}
 		}
 
 		// TODO - pause screen
 		batch.end();
+
+		for (AbstractHud h : toRemove) {
+			if (h != null)
+				removeHud(h);
+		}
 	}
 
 	@Override
