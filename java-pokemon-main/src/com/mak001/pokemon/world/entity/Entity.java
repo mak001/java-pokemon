@@ -84,9 +84,7 @@ public abstract class Entity extends Locatable implements Disposable {
 		atlas.dispose();
 	}
 
-	public void update() {
-		// TODO
-	}
+	public abstract void update();
 
 	public Direction getDirection() {
 		return direction;

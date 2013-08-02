@@ -2,7 +2,6 @@ package com.mak001.pokemon.world.entity;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.world.World;
@@ -51,7 +50,7 @@ public class NPC extends Entity {
 
 	public NPC(Direction direction, ArrayList<Vector2> path, World world,
 			Interaction interaction, String generic_name, String name) {
-		super(direction, path.get(0), generic_name, world);
+		super(direction, new Vector2(path.get(0)), generic_name, world);
 		this.name = name;
 		this.path = path;
 		this.interaction = interaction;
@@ -64,29 +63,18 @@ public class NPC extends Entity {
 
 	public void update() {
 		if (talking) {
-			if (!getDirection().equals(getDirection(world.getPlayer())))
-				direction = getDirection(world.getPlayer());
+			setDirection(world.getPlayer().getPosition());
 		} else {
 			if (path.size() > 1) {
-				Vector2 pos = path.get(nextPosition);
-				if (pos.x == position.x && pos.y == position.y) {
-					System.out.println("Getting next pos...");
-					nextPosition++;
-					if (nextPosition == path.size())
-						nextPosition = 0;
-				}
+
 				if (!isMoving()) {
-					if (!getDirection().equals(
-							getDirection(path.get(nextPosition))))
-						direction = getDirection(path.get(nextPosition));
+					if (path.get(nextPosition).x == position.x
+							&& path.get(nextPosition).y == position.y) {
+						updatePos();
+					}
+					setDirection(path.get(nextPosition));
 
 					Vector2 v = getNextPos();
-					System.out.println("X: " + position.x + ", Y: "
-							+ position.y);
-					System.out.println("Next pos X: " + v.x + ", Y: " + v.y);
-					System.out.println("Dextination X: " + pos.x + ", Y: "
-							+ pos.y);
-
 					if (!isBlocked(v.x, v.y, direction))
 						move();
 				} else {
@@ -95,6 +83,19 @@ public class NPC extends Entity {
 			} else {
 				direction = original_direction;
 			}
+		}
+	}
+
+	private void setDirection(Vector2 vec) {
+		if (!getDirection().equals(getDirection(vec)))
+			direction = getDirection(vec);
+	}
+
+	private void updatePos() {
+		if (nextPosition == path.size() - 1) {
+			nextPosition = 0;
+		} else {
+			nextPosition++;
 		}
 	}
 
@@ -115,7 +116,7 @@ public class NPC extends Entity {
 	}
 
 	private void move() {
-		switch (getDirection()) { // TODO - move
+		switch (getDirection()) {
 		case DOWN:
 			position.y -= (1f / PokeGame.TILE_DIMENSION);
 			break;
@@ -129,12 +130,6 @@ public class NPC extends Entity {
 			position.y += (1f / PokeGame.TILE_DIMENSION);
 			break;
 		}
-	}
-
-	@Override
-	public void render(SpriteBatch batch) {
-		super.render(batch);
-		update();
 	}
 
 	public String getName() {
