@@ -1,5 +1,7 @@
 package com.mak001.pokemon.world;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -69,10 +71,22 @@ public class WorldRenderer implements Disposable {
 		renderer.renderTileLayer(terrain);
 		renderer.renderTileLayer(below);
 
-		world.getPlayer().render(batch);
+		ArrayList<ArrayList<Entity>> array = new ArrayList<ArrayList<Entity>>();
+		for (int i = 0; i < world.getHeight(); i++) {
+			array.add(new ArrayList<Entity>());
+
+		}
+		array.get(world.getHeight() - (int) world.getPlayer().getPosition().y)
+				.add(world.getPlayer());
 
 		for (Entity npc : world.getNPCs()) {
-			npc.render(batch);
+			array.get(world.getHeight() - (int) npc.getPosition().y).add(npc);
+		}
+
+		for (ArrayList<Entity> ae : array) {
+			for (Entity e : ae) {
+				e.render(batch);
+			}
 		}
 
 		renderer.renderTileLayer(above);

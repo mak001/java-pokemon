@@ -4,11 +4,10 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.world.Collision;
 import com.mak001.pokemon.world.Locatable;
@@ -20,6 +19,9 @@ public abstract class Entity extends Locatable implements Disposable {
 	private boolean moved = false;
 	private boolean moved_ = false;
 	protected String generic_name;
+
+	protected Vector2 positionFuture;
+	protected Vector2 positionPast;
 
 	public TextureAtlas atlas;
 	private HashMap<String, AtlasRegion> regions;
@@ -85,6 +87,56 @@ public abstract class Entity extends Locatable implements Disposable {
 	}
 
 	public abstract void update();
+
+	private boolean didUpdate = false;
+
+	protected void updateBounds() {
+		if (isMoving()) {
+			if (!didUpdate)
+				switch (direction) {
+				case DOWN:
+					positionPast = new Vector2(position.x, getNearest(
+							position.y, true));
+					positionFuture = new Vector2(position.x, getNearest(
+							position.y, false));
+					didUpdate = true;
+					break;
+				case LEFT:
+					positionPast = new Vector2(getNearest(position.x, true),
+							position.y);
+					positionFuture = new Vector2(getNearest(position.x, false),
+							position.y);
+					didUpdate = true;
+					break;
+				case RIGHT:
+					positionPast = new Vector2(getNearest(position.x, false),
+							position.y);
+					positionFuture = new Vector2(getNearest(position.x, true),
+							position.y);
+					didUpdate = true;
+					break;
+				case UP:
+					positionPast = new Vector2(position.x, getNearest(
+							position.y, false));
+					positionFuture = new Vector2(position.x, getNearest(
+							position.y, true));
+					didUpdate = true;
+					break;
+				}
+		} else {
+			positionPast = null;
+			positionFuture = null;
+			didUpdate = false;
+		}
+	}
+
+	private int getNearest(float f, boolean up) {
+		if (up) {
+			return (int) Math.ceil(f);
+		} else {
+			return (int) Math.floor(f);
+		}
+	}
 
 	public Direction getDirection() {
 		return direction;
@@ -178,13 +230,18 @@ public abstract class Entity extends Locatable implements Disposable {
 		return isBlocked(getCollision((int) x, (int) f), d);
 	}
 
-	protected int getCollision(int x, int y) {// TODO- test
+	protected int getCollision(int x, int y) {
 		if (world.getCollision().getCell(x, y) == null) {
 			for (NPC npc : world.getNPCs()) {
-				if (!npc.getBounds().equals(bounds)) {
-					if (npc.getBounds().contains(x, y))
+				if (!npc.equals(this)) {
+					if (willCollide(npc, x, y)) {
 						return Collision.WALL.getType();
+					}
 				}
+			}
+			if (!(this instanceof Player)) {
+				if (willCollide(world.getPlayer(), x, y))
+					return Collision.WALL.getType();
 			}
 			return Collision.NONE.getType();
 		} else {
@@ -204,6 +261,22 @@ public abstract class Entity extends Locatable implements Disposable {
 				return Collision.NONE.getType();
 			}
 		}
+	}
+
+	private boolean willCollide(Entity e, float x, float y) {
+		if (e.positionPast != null && e.positionFuture != null) {
+			return willCollide(e.positionPast, x, y)
+					&& willCollide(e.positionFuture, x, y);
+		}
+		return willCollide(e.position, x, y);
+	}
+
+	private boolean willCollide(Vector2 v, float x, float y) {
+		return willCollide(v.x, v.y, x, y);
+	}
+
+	private boolean willCollide(float x, float y, float x2, float y2) {
+		return x == x2 && y == y2;
 	}
 
 	public void render(SpriteBatch batch) {

@@ -30,6 +30,7 @@ public class World {
 	private Music music;
 	private String map_name;
 	private int mapHeight;
+	private int mapWidth;
 
 	private Sound doorOpen;
 
@@ -50,6 +51,7 @@ public class World {
 	public World(GameScreen screen, int player_x, int player_y,
 			ArrayList<NPC> npcs, String map_name) {
 		this.screen = screen;
+
 		this.npcs = new ArrayList<NPC>() {
 			private static final long serialVersionUID = 1L;
 			{
@@ -71,6 +73,7 @@ public class World {
 
 		map = new TmxMapLoader().load("data/maps/" + map_name + "/map.tmx");
 		mapHeight = map.getProperties().get("height", Integer.class);
+		mapWidth = map.getProperties().get("width", Integer.class);
 		System.out.println(mapHeight);
 
 		player = new Player(Direction.UP, player_x, mapHeight - player_y, this);
@@ -152,7 +155,13 @@ public class World {
 				}
 			}
 		}
-		// TODO Auto-generated method stub
+	}
 
+	public int getHeight() {
+		return mapHeight;
+	}
+
+	public int getWidth() {
+		return mapWidth;
 	}
 }

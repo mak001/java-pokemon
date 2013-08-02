@@ -86,6 +86,7 @@ public class Player extends Entity {
 				world.handleDoor((int) position.x, (int) position.y);
 			}
 		}
+		updateBounds();
 	}
 
 	public void setMovement(boolean movement, Direction direction) {
@@ -116,5 +117,6 @@ public class Player extends Entity {
 	public void setPosition(int x, int y) {
 		position.x = x;
 		position.y = y;
+		updateBounds();
 	}
 }

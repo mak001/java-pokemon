@@ -75,8 +75,9 @@ public class NPC extends Entity {
 					setDirection(path.get(nextPosition));
 
 					Vector2 v = getNextPos();
-					if (!isBlocked(v.x, v.y, direction))
+					if (!isBlocked(v.x, v.y, direction)) {
 						move();
+					}
 				} else {
 					move();
 				}
@@ -84,6 +85,7 @@ public class NPC extends Entity {
 				direction = original_direction;
 			}
 		}
+		updateBounds();
 	}
 
 	private void setDirection(Vector2 vec) {

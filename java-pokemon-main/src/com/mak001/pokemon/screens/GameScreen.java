@@ -68,8 +68,6 @@ public class GameScreen extends AbstractScreen {
 				}
 			}
 		}
-
-		// TODO - pause screen
 		batch.end();
 
 		for (AbstractHud h : toRemove) {
