@@ -266,7 +266,7 @@ public abstract class Entity extends Locatable implements Disposable {
 	private boolean willCollide(Entity e, float x, float y) {
 		if (e.positionPast != null && e.positionFuture != null) {
 			return willCollide(e.positionPast, x, y)
-					&& willCollide(e.positionFuture, x, y);
+					|| willCollide(e.positionFuture, x, y);
 		}
 		return willCollide(e.position, x, y);
 	}
