@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Json;
 
 public class Control {
 
-	HashMap<GameBoyButton, HashMap<Input, InputValue>> controls;
+	private HashMap<GameBoyButton, HashMap<Input, InputValue>> controls;
 
 	public Control() {
 		this(new HashMap<GameBoyButton, HashMap<Input, InputValue>>());

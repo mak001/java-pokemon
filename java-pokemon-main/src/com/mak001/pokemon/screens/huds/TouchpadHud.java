@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.mak001.pokemon.screens.GameScreen;
 
 public class TouchpadHud extends AbstractHud {
 
@@ -18,8 +19,8 @@ public class TouchpadHud extends AbstractHud {
 	private Circle a_button = new Circle();
 	private Circle b_button = new Circle();
 
-	public TouchpadHud(SpriteBatch batch) {
-		super(batch);
+	public TouchpadHud(GameScreen screen) {
+		super(screen);
 		shape = new ShapeRenderer();
 	}
 

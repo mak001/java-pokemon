@@ -2,15 +2,17 @@ package com.mak001.pokemon.screens.huds;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
+import com.mak001.pokemon.screens.GameScreen;
 
 public abstract class AbstractHud implements Disposable {
 
 	protected SpriteBatch batch;
+	protected GameScreen screen;
 	protected int cycles = -1;
 	public int currentCycles = 0;
 
-	public AbstractHud(SpriteBatch spriteBatch) {
-		this(spriteBatch, -1);
+	public AbstractHud(GameScreen gameScreen) {
+		this(gameScreen, -1);
 	}
 
 	/**
@@ -20,8 +22,9 @@ public abstract class AbstractHud implements Disposable {
 	 *            - number of times the render() method is called before
 	 *            disposing (1000 is a little longer than a second)
 	 */
-	public AbstractHud(SpriteBatch spriteBatch, int cycles) {
-		this.batch = spriteBatch;
+	public AbstractHud(GameScreen gameScreen, int cycles) {
+		this.screen = gameScreen;
+		this.batch = gameScreen.getBatch();
 		this.cycles = cycles;
 	}
 

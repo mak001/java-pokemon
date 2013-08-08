@@ -116,7 +116,6 @@ public class WorldRenderer implements Disposable {
 		float h = (float) VIRTUAL_HEIGHT * scale;
 		viewport = new Rectangle(crop.x, crop.y, w, h);
 		screen.setScale(scale);
-		System.out.println(crop.x + ", " + crop.y + ", " + w + ", " + h);
 	}
 
 	public void update() {

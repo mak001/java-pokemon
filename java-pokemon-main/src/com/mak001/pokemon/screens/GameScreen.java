@@ -15,7 +15,7 @@ public class GameScreen extends AbstractScreen {
 
 	public WorldRenderer renderer;
 	private boolean paused = false;
-	private final int PAUSE_HUD = 0;
+	public static final int PAUSE_HUD = 0;
 	private OrganizedMap<Integer, AbstractHud> huds;
 	private SpriteBatch batch;
 	private int width;
@@ -149,5 +149,9 @@ public class GameScreen extends AbstractScreen {
 
 	public int getHeight() {
 		return height;
+	}
+
+	public OrganizedMap<Integer, AbstractHud> getHuds() {
+		return huds;
 	}
 }

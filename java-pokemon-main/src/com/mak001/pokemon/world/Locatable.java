@@ -50,4 +50,19 @@ public abstract class Locatable {
 		}
 		return Direction.UP;
 	}
+
+	public Vector2 getPosition(Direction direction) {
+		switch (direction) {
+		case DOWN:
+			return new Vector2(position.x, position.y - 1);
+		case LEFT:
+			return new Vector2(position.x - 1, position.y);
+		case RIGHT:
+			return new Vector2(position.x + 1, position.y);
+		case UP:
+			return new Vector2(position.x, position.y + 1);
+		default:
+			return null;
+		}
+	}
 }

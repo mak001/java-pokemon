@@ -13,14 +13,13 @@ public class ControllerHud extends AbstractHud {
 
 	private NinePatch patch;
 	private TextureAtlas atlas;
-	private GameScreen screen;
 	private BitmapFont black;
 
 	private String status = " disconnected";
 
 	public ControllerHud(Controller controller, GameScreen screen, int cycles,
 			boolean connected) {
-		super(screen.getBatch(), cycles);
+		super(screen, cycles);
 		this.controller = controller;
 		this.screen = screen;
 

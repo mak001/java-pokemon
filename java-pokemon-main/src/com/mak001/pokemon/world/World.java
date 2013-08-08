@@ -17,6 +17,7 @@ import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
+import com.mak001.pokemon.world.entity.Interaction;
 import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
 
@@ -51,7 +52,8 @@ public class World {
 	public World(GameScreen screen, int player_x, int player_y,
 			ArrayList<NPC> npcs, String map_name) {
 		this.screen = screen;
-
+		// Direction direction, final Vector2 position, World world,
+		// Interaction interaction, String generic_name, String name
 		this.npcs = new ArrayList<NPC>() {
 			private static final long serialVersionUID = 1L;
 			{
@@ -63,7 +65,8 @@ public class World {
 						add(new Vector2(12, 12));
 						add(new Vector2(10, 12));
 					}
-				}, World.this, "player", "player"));
+				}, World.this, new Interaction("Hello", new Interaction(
+						"Good Bye")), "player", "player"));
 			}
 		};
 		this.map_name = map_name;

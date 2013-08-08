@@ -20,7 +20,7 @@ public class PauseHud extends AbstractHud {
 	private Skin skin;
 
 	public PauseHud(GameScreen gameScreen) {
-		super(gameScreen.getBatch());
+		super(gameScreen);
 
 		screen = gameScreen;
 
@@ -64,6 +64,26 @@ public class PauseHud extends AbstractHud {
 		black.dispose();
 		// skin.dispose();
 		// TODO Auto-generated method stub
+	}
+
+	public void moveSelectionUp() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void moveSelectionDown() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void selectSelection() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void cancel() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

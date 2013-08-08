@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
+import com.mak001.pokemon.screens.huds.NPCInteractionHud;
 import com.mak001.pokemon.world.World;
 
 public class NPC extends Entity {
 
 	private ArrayList<Vector2> path;
 	private Interaction interaction;
+
+	private NPCInteractionHud hud = null;
 
 	private String name;
 	private boolean talking = false;
@@ -142,8 +145,42 @@ public class NPC extends Entity {
 		return generic_name + " " + name;
 	}
 
+	// TODO - move up to entity
 	public void setTalking(boolean talking) {
-		this.talking = talking;
+		if (talking) {
+			if (hud == null) {
+				hud = new NPCInteractionHud(world.screen, this);
+				world.screen.addHud(hud);
+				this.talking = talking;
+			} else {
+				hud.yesOption();
+			}
+		} else {
+
+			if (hud == null) {
+				resetHud();
+			} else {
+				if (hud.getInteraction() != null) {
+					if (talking) {
+						hud.yesOption();
+					} else {
+						hud.noOption();
+					}
+				} else {
+					resetHud();
+				}
+			}
+		}
+	}
+
+	public void resetHud() {
+		this.talking = false;
+		if (hud != null)
+			hud = null;
+	}
+
+	public boolean isTalking() {
+		return talking;
 	}
 
 }
