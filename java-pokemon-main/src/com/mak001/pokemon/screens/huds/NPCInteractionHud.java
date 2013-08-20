@@ -26,6 +26,8 @@ public class NPCInteractionHud extends AbstractHud {
 		black = new BitmapFont(Gdx.files.internal("data/fonts/black_font.fnt"),
 				false);
 		black.setScale(1 / screen.getScale());
+
+		screen.renderer.world.getPlayer().setTalking(true);
 	}
 
 	public NPCInteractionHud(GameScreen screen, NPC npc) {
@@ -61,6 +63,7 @@ public class NPCInteractionHud extends AbstractHud {
 		if (npc != null) {
 			npc.resetHud();
 		}
+		screen.renderer.world.getPlayer().setTalking(false);
 	}
 
 	@Override

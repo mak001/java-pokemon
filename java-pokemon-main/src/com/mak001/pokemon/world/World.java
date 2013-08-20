@@ -9,7 +9,6 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.GlobalVars;
@@ -17,7 +16,6 @@ import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
-import com.mak001.pokemon.world.entity.Interaction;
 import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
 
@@ -26,8 +24,11 @@ public class World {
 	public GameScreen screen;
 	private Player player;
 	private ArrayList<NPC> npcs;
+	private ArrayList<ScriptedEvent> events;
 	private TiledMap map;
+
 	private TiledMapTileLayer collision;
+
 	private Music music;
 	private String map_name;
 	private int mapHeight;
@@ -35,60 +36,29 @@ public class World {
 
 	private Sound doorOpen;
 
-	public World(GameScreen screen, Vector2 player_pos, String map_name) {
-		this(screen, player_pos, new ArrayList<NPC>(), map_name);
-	}
-
-	public World(GameScreen screen, int player_x, int player_y, String map_name) {
-		this(screen, player_x, player_y, new ArrayList<NPC>(), map_name);
-	}
-
-	public World(GameScreen screen, Vector2 player_pos, ArrayList<NPC> npcs,
-			String map_name) {
-		this(screen, (int) player_pos.x, (int) player_pos.y,
-				new ArrayList<NPC>(), map_name);
-	}
-
-	public World(GameScreen screen, int player_x, int player_y,
-			ArrayList<NPC> npcs, String map_name) {
+	public World(String name, GameScreen screen, TiledMap map, Music music,
+			Vector2 playerPos) {
 		this.screen = screen;
-		// Direction direction, final Vector2 position, World world,
-		// Interaction interaction, String generic_name, String name
-		this.npcs = new ArrayList<NPC>() {
-			private static final long serialVersionUID = 1L;
-			{
-				add(new NPC(Direction.UP, new ArrayList<Vector2>() {
-					private static final long serialVersionUID = 1L;
-					{
-						add(new Vector2(10, 10));
-						add(new Vector2(12, 10));
-						add(new Vector2(12, 12));
-						add(new Vector2(10, 12));
-					}
-				}, World.this, new Interaction("Hello", new Interaction(
-						"Good Bye")), "player", "player"));
-			}
-		};
-		this.map_name = map_name;
+		this.map_name = name;
+		this.map = map;
+		mapHeight = map.getProperties().get("height", Integer.class);
+		mapWidth = map.getProperties().get("width", Integer.class);
+
+		collision = (TiledMapTileLayer) map.getLayers().get("collision");
+
+		this.music = music;
+		music.setLooping(true);
+		music.setVolume(GlobalVars.music_sound_level);
+		music.play();
 
 		doorOpen = Gdx.audio.newSound(Gdx.files.internal(PokeGame.SOUND_EFFECTS
 				+ "/world/dooropen.mp3"));
 
-		map = new TmxMapLoader().load("data/maps/" + map_name + "/map.tmx");
-		mapHeight = map.getProperties().get("height", Integer.class);
-		mapWidth = map.getProperties().get("width", Integer.class);
-		System.out.println(mapHeight);
+		player = new Player(Direction.UP, (int) playerPos.x, mapHeight
+				- (int) playerPos.y, this);
 
-		player = new Player(Direction.UP, player_x, mapHeight - player_y, this);
-
-		collision = (TiledMapTileLayer) map.getLayers().get("collision");
-
-		music = Gdx.audio.newMusic(Gdx.files.internal("data/maps/" + map_name
-				+ "/music.mp3"));
-
-		music.setLooping(true);
-		music.setVolume(GlobalVars.music_sound_level);
-		music.play();
+		npcs = new ArrayList<NPC>();
+		events = new ArrayList<ScriptedEvent>();
 	}
 
 	public Player getPlayer() {
@@ -100,6 +70,10 @@ public class World {
 		player.update();
 		for (Entity npc : npcs) {
 			npc.update();
+		}
+		for (ScriptedEvent se : events) {
+			if (!se.isRunning() && se.shouldTrigger())
+				se.run();
 		}
 	}
 
@@ -116,6 +90,14 @@ public class World {
 
 	public ArrayList<NPC> getNPCs() {
 		return npcs;
+	}
+
+	public boolean addNPC(NPC npc) {
+		return npcs.add(npc);
+	}
+
+	public boolean addEvent(ScriptedEvent se) {
+		return events.add(se);
 	}
 
 	public TiledMap getMap() {
@@ -144,12 +126,12 @@ public class World {
 								"new_y", String.class));
 					} catch (NumberFormatException e) {
 					}
+					doorOpen.play(GlobalVars.effects_sound_level);
 					if (world.equals(map_name)) {
-						doorOpen.play(GlobalVars.effects_sound_level);
 						player.setPosition(new_x, mapHeight - new_y);
 					} else {
-						doorOpen.play(GlobalVars.effects_sound_level);
-						World w = new World(screen, new_x, new_y, world);
+						World w = new WorldLoader(screen, world, new_x, new_y)
+								.getWorld();
 						screen.setWorld(w);
 						PokeGame.handler.setWorld(w);
 						// System.out.println("other worlds not handled yet");

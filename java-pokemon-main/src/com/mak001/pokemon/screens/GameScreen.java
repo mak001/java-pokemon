@@ -3,12 +3,12 @@ package com.mak001.pokemon.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.huds.AbstractHud;
 import com.mak001.pokemon.screens.huds.PauseHud;
 import com.mak001.pokemon.utils.OrganizedMap;
 import com.mak001.pokemon.world.World;
+import com.mak001.pokemon.world.WorldLoader;
 import com.mak001.pokemon.world.WorldRenderer;
 
 public class GameScreen extends AbstractScreen {
@@ -26,7 +26,7 @@ public class GameScreen extends AbstractScreen {
 	public GameScreen(PokeGame game) {
 		super(game);
 		batch = new SpriteBatch();
-		setWorld(new World(this, new Vector2(6, 7), "test"));
+		setWorld(new WorldLoader(this, "test", 6, 7).getWorld());
 		huds = new OrganizedMap<Integer, AbstractHud>();
 	}
 

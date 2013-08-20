@@ -15,7 +15,6 @@ public class NPC extends Entity {
 	private NPCInteractionHud hud = null;
 
 	private String name;
-	private boolean talking = false;
 	private Direction original_direction;
 	private int nextPosition = 1;
 
@@ -145,7 +144,7 @@ public class NPC extends Entity {
 		return generic_name + " " + name;
 	}
 
-	// TODO - move up to entity
+	@Override
 	public void setTalking(boolean talking) {
 		if (talking) {
 			if (hud == null) {
@@ -177,10 +176,6 @@ public class NPC extends Entity {
 		this.talking = false;
 		if (hud != null)
 			hud = null;
-	}
-
-	public boolean isTalking() {
-		return talking;
 	}
 
 }

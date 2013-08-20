@@ -90,19 +90,21 @@ public class Player extends Entity {
 	}
 
 	public void setMovement(boolean movement, Direction direction) {
-		if (direction.equals(getDirection()))
-			shouldMove_2 = movement;
+		if (!talking) {
+			if (direction.equals(getDirection()))
+				shouldMove_2 = movement;
 
-		if (!isMoving())
-			shouldMove_2 = movement;
+			if (!isMoving())
+				shouldMove_2 = movement;
 
-		if (movement) {
-			if (!isMoving()) {
-				setDirection(direction);
-			} else {
-				temp = direction;
+			if (movement) {
+				if (!isMoving()) {
+					setDirection(direction);
+				} else {
+					temp = direction;
+				}
+				shouldMove = true;
 			}
-			shouldMove = true;
 		}
 	}
 
@@ -118,5 +120,10 @@ public class Player extends Entity {
 		position.x = x;
 		position.y = y;
 		updateBounds();
+	}
+
+	@Override
+	public void setTalking(boolean talking) {
+		this.talking = talking;
 	}
 }

@@ -20,6 +20,8 @@ public abstract class Entity extends Locatable implements Disposable {
 	private boolean moved_ = false;
 	protected String generic_name;
 
+	protected boolean talking = false;
+
 	protected Vector2 positionFuture;
 	protected Vector2 positionPast;
 
@@ -283,5 +285,11 @@ public abstract class Entity extends Locatable implements Disposable {
 		batch.draw(getTextureRegion(), position.x, position.y, 0, 0,
 				PokeGame.TILE_DIMENSION, PokeGame.CHAR_HEIGHT,
 				1f / PokeGame.TILE_DIMENSION, 1f / PokeGame.TILE_DIMENSION, 0);
+	}
+
+	public abstract void setTalking(boolean talking);
+
+	public boolean isTalking() {
+		return talking;
 	}
 }
