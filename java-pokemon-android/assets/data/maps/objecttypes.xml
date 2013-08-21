@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="Door" color="#a40000"/>
+ <objecttype name="NPC" color="#0000ff"/>
+ <objecttype name="NPC_PATH" color="#00a489"/>
+ <objecttype name="Event" color="#f3ff00"/>
+</objecttypes>

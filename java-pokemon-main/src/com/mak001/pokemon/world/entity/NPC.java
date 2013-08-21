@@ -39,15 +39,8 @@ public class NPC extends Entity {
 	}
 
 	public NPC(Direction direction, ArrayList<Vector2> path, World world,
-			final String interaction, String generic_name, String name) {
-		this(direction, path, world, interaction == null ? null : interaction
-				.equals("") ? null : new Interaction(interaction),
-				generic_name, name);
-	}
-
-	public NPC(Direction direction, ArrayList<Vector2> path, World world,
 			String generic_name, String name) {
-		this(direction, path, world, "", generic_name, name);
+		this(direction, path, world, null, generic_name, name);
 	}
 
 	public NPC(Direction direction, ArrayList<Vector2> path, World world,

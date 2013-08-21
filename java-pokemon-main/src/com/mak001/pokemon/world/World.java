@@ -18,6 +18,7 @@ import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
 import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
+import com.mak001.pokemon.world.objects.Door;
 
 public class World {
 
@@ -25,6 +26,7 @@ public class World {
 	private Player player;
 	private ArrayList<NPC> npcs;
 	private ArrayList<ScriptedEvent> events;
+	private ArrayList<Door> doors;
 	private TiledMap map;
 
 	private TiledMapTileLayer collision;
@@ -59,6 +61,7 @@ public class World {
 
 		npcs = new ArrayList<NPC>();
 		events = new ArrayList<ScriptedEvent>();
+		doors = new ArrayList<Door>();
 	}
 
 	public Player getPlayer() {
@@ -98,6 +101,10 @@ public class World {
 
 	public boolean addEvent(ScriptedEvent se) {
 		return events.add(se);
+	}
+
+	public boolean addDoor(Door door) {
+		return doors.add(door);
 	}
 
 	public TiledMap getMap() {
