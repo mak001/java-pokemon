@@ -2,8 +2,8 @@ package com.mak001.pokemon.world.entity;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
-import com.mak001.pokemon.world.Collision;
 import com.mak001.pokemon.world.World;
+import com.mak001.pokemon.world.objects.Door;
 
 public class Player extends Entity {
 
@@ -108,12 +108,13 @@ public class Player extends Entity {
 		}
 	}
 
-	private boolean isDoor(int i) {
-		return i == Collision.DOOR.getType();
-	}
-
 	private boolean isDoor(float x, float y) {
-		return isDoor(getCollision((int) x, (int) y));
+		boolean b = false;
+		for (Door d : world.getDoors()) {
+			if (d.getBounds().x == x && d.getBounds().y == y)
+				b = true;
+		}
+		return b;
 	}
 
 	public void setPosition(int x, int y) {

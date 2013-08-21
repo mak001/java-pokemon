@@ -4,4 +4,5 @@
  <objecttype name="NPC" color="#0000ff"/>
  <objecttype name="NPC_PATH" color="#00a489"/>
  <objecttype name="Event" color="#f3ff00"/>
+ <objecttype name="Collision" color="#f700ff"/>
 </objecttypes>

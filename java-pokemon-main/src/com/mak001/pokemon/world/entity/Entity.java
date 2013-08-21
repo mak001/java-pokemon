@@ -5,13 +5,12 @@ import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.mak001.pokemon.PokeGame;
-import com.mak001.pokemon.world.Collision;
 import com.mak001.pokemon.world.Locatable;
 import com.mak001.pokemon.world.World;
+import com.mak001.pokemon.world.objects.Collidable;
 
 public abstract class Entity extends Locatable implements Disposable {
 
@@ -224,45 +223,33 @@ public abstract class Entity extends Locatable implements Disposable {
 
 	protected boolean isBlocked(int i, Direction d) {
 		if (d.equals(Direction.DOWN))
-			return i == Collision.WALL.getType();
-		return i == Collision.WALL.getType() || i == Collision.CLIFF.getType();
+			return i == Collidable.SOLID;
+		return i == Collidable.SOLID || i == Collidable.CLIFF;
 	}
 
 	protected boolean isBlocked(float x, float f, Direction d) {
 		return isBlocked(getCollision((int) x, (int) f), d);
 	}
 
-	protected int getCollision(int x, int y) {
-		if (world.getCollision().getCell(x, y) == null) {
-			for (NPC npc : world.getNPCs()) {
-				if (!npc.equals(this)) {
-					if (willCollide(npc, x, y)) {
-						return Collision.WALL.getType();
-					}
-				}
-			}
-			if (!(this instanceof Player)) {
-				if (willCollide(world.getPlayer(), x, y))
-					return Collision.WALL.getType();
-			}
-			return Collision.NONE.getType();
-		} else {
-			TextureRegion r = world.getCollision().getCell(x, y).getTile()
-					.getTextureRegion();
-
-			if (Collision.WALL.equals(r)) {
-				return Collision.WALL.getType();
-
-			} else if (Collision.DOOR.equals(r)) {
-				return Collision.DOOR.getType();
-
-			} else if (Collision.CLIFF.equals(r)) {
-				return Collision.CLIFF.getType();
-
-			} else {
-				return Collision.NONE.getType();
+	protected int getCollision(int x, int y) {// TODO
+		for (Collidable c : world.getCollision()) {
+			if (c.getPolygon().contains(x, y)) {
+				return c.getCollision();
 			}
 		}
+
+		for (NPC npc : world.getNPCs()) {
+			if (!npc.equals(this)) {
+				if (willCollide(npc, x, y)) {
+					return Collidable.SOLID;
+				}
+			}
+		}
+		if (!(this instanceof Player)) {
+			if (willCollide(world.getPlayer(), x, y))
+				return Collidable.SOLID;
+		}
+		return Collidable.NONE;
 	}
 
 	private boolean willCollide(Entity e, float x, float y) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -14,9 +15,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.NPC;
+import com.mak001.pokemon.world.objects.Collidable;
 import com.mak001.pokemon.world.objects.Door;
 
 public class WorldLoader {
@@ -38,12 +41,11 @@ public class WorldLoader {
 
 		world = new World(worldName, screen, map, getMusic(map.getProperties()
 				.get("music", String.class), worldName), playerPos);
-		// TODO - load npcs and events
 		loadObjects(worldName, map);
 	}
 
 	private void loadObjects(String worldName, TiledMap map) {
-		MapObjects objs = map.getLayers().get("doors").getObjects();
+		MapObjects objs = map.getLayers().get("objects").getObjects();
 		for (int i = 0; i < objs.getCount(); i++) {
 			MapObject o = objs.get(i);
 			String type = o.getProperties().get("type", String.class);
@@ -53,10 +55,28 @@ public class WorldLoader {
 			} else if (type.equals("Door")) {
 				loadDoor(o);
 			} else if (type.equals("Event")) {
-
+				loadEvent(o);
+			} else if (type.equals("Collision")) {
+				loadColision(o);
 			}
 		}
 		// TODO Auto-generated method stub
+	}
+
+	private void loadColision(MapObject o) {
+		if (o instanceof PolygonMapObject) {
+			int flag = getPropInt(o, "flag");
+			Sound sound;
+			// TODO - offset
+			world.addCollidable(new Collidable(((PolygonMapObject) o)
+					.getPolygon(), world, flag));
+		}
+		// TODO Auto-generated method stub
+	}
+
+	private void loadEvent(MapObject o) {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void loadNPC(MapObject o, MapObjects objs) {
@@ -71,9 +91,8 @@ public class WorldLoader {
 			path = toPath(_path);
 			world.addNPC(new NPC(direction, path, world, null, gName, name));
 		} else {
-			world.addNPC(new NPC(direction, new Vector2(o.getProperties().get(
-					"x", Integer.class), o.getProperties().get("y",
-					Integer.class)), world, null, gName, name));
+			world.addNPC(new NPC(direction, new Vector2(getPropInt(o, "x"),
+					getPropInt(o, "y")), world, null, gName, name));
 
 		}
 		// TODO load interactions
@@ -99,24 +118,30 @@ public class WorldLoader {
 		ArrayList<Vector2> path = new ArrayList<Vector2>();
 		if (o instanceof PolylineMapObject) {
 			float[] vert = ((PolylineMapObject) o).getPolyline().getVertices();
-			float x = ((PolylineMapObject) o).getPolyline().getX() / 16;
-			float y = ((PolylineMapObject) o).getPolyline().getY() / 16;
+			float x = ((PolylineMapObject) o).getPolyline().getX()
+					/ PokeGame.TILE_DIMENSION;
+			float y = ((PolylineMapObject) o).getPolyline().getY()
+					/ PokeGame.TILE_DIMENSION;
 			for (int i = 0; i < vert.length - 2; i += 2) {
-				path.add(new Vector2((vert[i] / 16) + x, (vert[i + 1] / 16) + y));
+				path.add(new Vector2((vert[i] / PokeGame.TILE_DIMENSION) + x,
+						(vert[i + 1] / PokeGame.TILE_DIMENSION) + y));
 			}
 		} else if (o instanceof PolygonMapObject) {
 			float[] vert = ((PolygonMapObject) o).getPolygon().getVertices();
-			float x = ((PolygonMapObject) o).getPolygon().getX() / 16;
-			float y = ((PolygonMapObject) o).getPolygon().getY() / 16;
+			float x = ((PolygonMapObject) o).getPolygon().getX()
+					/ PokeGame.TILE_DIMENSION;
+			float y = ((PolygonMapObject) o).getPolygon().getY()
+					/ PokeGame.TILE_DIMENSION;
 			for (int i = 0; i < vert.length - 2; i += 2) {
-				path.add(new Vector2((vert[i] / 16) + x, (vert[i + 1] / 16) + y));
+				path.add(new Vector2((vert[i] / PokeGame.TILE_DIMENSION) + x,
+						(vert[i + 1] / PokeGame.TILE_DIMENSION) + y));
 			}
 		} else if (o instanceof RectangleMapObject) {
 			Rectangle rect = ((RectangleMapObject) o).getRectangle();
-			float x = rect.x / 16;
-			float y = rect.y / 16;
-			float width = rect.width / 16;
-			float height = rect.height / 16;
+			float x = rect.x / PokeGame.TILE_DIMENSION;
+			float y = rect.y / PokeGame.TILE_DIMENSION;
+			float width = rect.width / PokeGame.TILE_DIMENSION;
+			float height = rect.height / PokeGame.TILE_DIMENSION;
 			path.add(new Vector2(x, y));
 			path.add(new Vector2(x + width, y));
 			path.add(new Vector2(x + width, y + height));
@@ -129,17 +154,17 @@ public class WorldLoader {
 		if (o instanceof RectangleMapObject) {
 			Rectangle r = ((RectangleMapObject) o).getRectangle();
 			String worldN = o.getProperties().get("world", String.class);
-			int new_x = (int) r.x / 16;
-			int new_y = (int) r.y / 16;
+			int new_x = (int) r.x / PokeGame.TILE_DIMENSION;
+			int new_y = (int) r.y / PokeGame.TILE_DIMENSION;
 
-			try {
+			try {// TODO
 				new_x = Integer.parseInt(o.getProperties().get("new_x",
 						String.class));
 				new_y = Integer.parseInt(o.getProperties().get("new_y",
 						String.class));
 			} catch (NumberFormatException e) {
 			}
-			world.addDoor(new Door((int) r.x, (int) r.y, worldN, new_x, new_y));
+			world.addDoor(new Door(r, worldN, new_x, new_y));
 		}
 	}
 
@@ -175,6 +200,14 @@ public class WorldLoader {
 			return new TmxMapLoader().load("data/maps/" + worldName);
 		} else {
 			return new TmxMapLoader().load("data/maps/" + worldName + ".tmx");
+		}
+	}
+
+	private int getPropInt(MapObject o, String prop) {
+		try {
+			return Integer.parseInt(o.getProperties().get(prop, String.class));
+		} catch (Exception e) {
+			return -1;
 		}
 	}
 

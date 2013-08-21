@@ -1,24 +1,30 @@
 package com.mak001.pokemon.world.objects;
 
+import com.badlogic.gdx.math.Rectangle;
+import com.mak001.pokemon.PokeGame;
+
 public class Door {
 
-	private final int posX, posY, newPosX, newPosY;
+	private final int newPosX, newPosY;
 	private final String world;
+	private final Rectangle bounds;
 
-	public Door(int posX, int posY, String worldName, int newPosX, int newPosY) {
-		this.posX = posX;
-		this.posY = posY;
+	public Door(Rectangle bounds, String worldName, int newPosX, int newPosY) {
+		this.bounds = scaleBounds(bounds);
 		this.world = worldName;
 		this.newPosX = newPosX;
 		this.newPosY = newPosY;
 	}
 
-	public int getPosX() {
-		return posX;
+	private Rectangle scaleBounds(Rectangle bounds) {
+		return new Rectangle(bounds.x / PokeGame.TILE_DIMENSION, bounds.y
+				/ PokeGame.TILE_DIMENSION, bounds.width
+				/ PokeGame.TILE_DIMENSION, bounds.height
+				/ PokeGame.TILE_DIMENSION);
 	}
 
-	public int getPosY() {
-		return posY;
+	public Rectangle getBounds() {
+		return bounds;
 	}
 
 	public int getNewPosX() {

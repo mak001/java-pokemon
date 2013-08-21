@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.GlobalVars;
@@ -18,6 +17,7 @@ import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
 import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
+import com.mak001.pokemon.world.objects.Collidable;
 import com.mak001.pokemon.world.objects.Door;
 
 public class World {
@@ -27,9 +27,8 @@ public class World {
 	private ArrayList<NPC> npcs;
 	private ArrayList<ScriptedEvent> events;
 	private ArrayList<Door> doors;
+	private ArrayList<Collidable> collisions;
 	private TiledMap map;
-
-	private TiledMapTileLayer collision;
 
 	private Music music;
 	private String map_name;
@@ -46,8 +45,6 @@ public class World {
 		mapHeight = map.getProperties().get("height", Integer.class);
 		mapWidth = map.getProperties().get("width", Integer.class);
 
-		collision = (TiledMapTileLayer) map.getLayers().get("collision");
-
 		this.music = music;
 		music.setLooping(true);
 		music.setVolume(GlobalVars.music_sound_level);
@@ -62,6 +59,7 @@ public class World {
 		npcs = new ArrayList<NPC>();
 		events = new ArrayList<ScriptedEvent>();
 		doors = new ArrayList<Door>();
+		collisions = new ArrayList<Collidable>();
 	}
 
 	public Player getPlayer() {
@@ -95,6 +93,14 @@ public class World {
 		return npcs;
 	}
 
+	public ArrayList<Door> getDoors() {
+		return doors;
+	}
+
+	public ArrayList<ScriptedEvent> getEvents() {
+		return events;
+	}
+
 	public boolean addNPC(NPC npc) {
 		return npcs.add(npc);
 	}
@@ -107,16 +113,20 @@ public class World {
 		return doors.add(door);
 	}
 
+	public boolean addCollidable(Collidable collidable) {
+		return collisions.add(collidable);
+	}
+
+	public ArrayList<Collidable> getCollision() {
+		return collisions;
+	}
+
 	public TiledMap getMap() {
 		return map;
 	}
 
-	public TiledMapTileLayer getCollision() {
-		return collision;
-	}
-
 	public void handleDoor(int x, int y) {
-		for (MapObject object : map.getLayers().get("doors").getObjects()) {
+		for (MapObject object : map.getLayers().get("objects").getObjects()) {
 			if (object instanceof RectangleMapObject) {
 				Rectangle bounds = ((RectangleMapObject) object).getRectangle();
 				if ((int) bounds.getX() / 16 == x
