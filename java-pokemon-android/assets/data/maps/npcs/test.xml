@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<INFO>
+
+    <NPC
+        generic_name="player"
+        real_name="player" >
+
+        <INTERACTION text="Hello." >
+
+            <INTERACTION text="GoodBye" >
+            </INTERACTION>
+            
+        </INTERACTION>
+    </NPC>
+
+    <NPC
+        generic_name="generic_name"
+        real_name="real_name" >
+
+        <INTERACTION text="text" >
+        </INTERACTION>
+    </NPC>
+
+</INFO>

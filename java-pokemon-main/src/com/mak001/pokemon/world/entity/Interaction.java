@@ -5,12 +5,8 @@ public class Interaction {
 	private String text;
 	private Interaction yes, no;
 
-	public Interaction(String string) {
-		this(string, null);
-	}
-
-	public Interaction(String string, Interaction next) {
-		this(string, next, null);
+	public Interaction(String string, Interaction... next) {
+		this(string, next[0], next.length > 1 ? next[1] : null);
 	}
 
 	public Interaction(String string, Interaction yes, Interaction no) {

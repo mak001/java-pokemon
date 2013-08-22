@@ -1,5 +1,8 @@
 package com.mak001.pokemon.world;
 
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -25,6 +28,9 @@ import com.mak001.pokemon.world.objects.Door;
 public class WorldLoader {
 
 	private World world;
+	private Class<?> c;
+	private ClassLoader loader;
+	private InteractionLoader interactionLoader;
 
 	public WorldLoader(GameScreen screen, String worldName) {
 		this(screen, worldName, new Vector2(0, 0));
@@ -36,7 +42,7 @@ public class WorldLoader {
 	}
 
 	public WorldLoader(GameScreen screen, String worldName, Vector2 playerPos) {
-
+		interactionLoader = new InteractionLoader(worldName);
 		TiledMap map = getMap(worldName);
 
 		world = new World(worldName, screen, map, getMusic(map.getProperties()
@@ -60,14 +66,12 @@ public class WorldLoader {
 				loadColision(o);
 			}
 		}
-		// TODO Auto-generated method stub
 	}
 
 	private void loadColision(MapObject o) {
 		if (o instanceof PolygonMapObject) {
 			int flag = getPropInt(o, "flag");
 			Sound sound;
-			// TODO - offset
 			world.addCollidable(new Collidable(((PolygonMapObject) o)
 					.getPolygon(), world, flag));
 		}
@@ -75,8 +79,24 @@ public class WorldLoader {
 	}
 
 	private void loadEvent(MapObject o) {
-		// TODO Auto-generated method stub
+		if (o instanceof RectangleMapObject) {
+			String clazzName = o.getProperties().get("class", String.class);
+			try {
 
+				loader = new URLClassLoader(new URL[] { Gdx.files.internal("")
+						.file().toURI().toURL() });
+				c = loader.loadClass("data.maps.events." + clazzName);
+
+				Constructor<?>[] cs = c.getConstructors();
+				Object invoke = cs[0].newInstance(((RectangleMapObject) o)
+						.getRectangle());
+				ScriptedEvent se = (ScriptedEvent) (invoke);
+				world.addEvent(se);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void loadNPC(MapObject o, MapObjects objs) {
@@ -89,13 +109,14 @@ public class WorldLoader {
 		if (_path != null) {
 			ArrayList<Vector2> path;
 			path = toPath(_path);
-			world.addNPC(new NPC(direction, path, world, null, gName, name));
+			world.addNPC(new NPC(direction, path, world, interactionLoader
+					.loadInteractions(gName, name), gName, name));
 		} else {
 			world.addNPC(new NPC(direction, new Vector2(getPropInt(o, "x"),
-					getPropInt(o, "y")), world, null, gName, name));
+					getPropInt(o, "y")), world, interactionLoader
+					.loadInteractions(gName, name), gName, name));
 
 		}
-		// TODO load interactions
 	}
 
 	private Direction getDirection(String string) {
@@ -154,16 +175,13 @@ public class WorldLoader {
 		if (o instanceof RectangleMapObject) {
 			Rectangle r = ((RectangleMapObject) o).getRectangle();
 			String worldN = o.getProperties().get("world", String.class);
-			int new_x = (int) r.x / PokeGame.TILE_DIMENSION;
-			int new_y = (int) r.y / PokeGame.TILE_DIMENSION;
 
-			try {// TODO
-				new_x = Integer.parseInt(o.getProperties().get("new_x",
-						String.class));
-				new_y = Integer.parseInt(o.getProperties().get("new_y",
-						String.class));
-			} catch (NumberFormatException e) {
-			}
+			int new_x = getPropInt(o, "new_x");
+			int new_y = getPropInt(o, "new_y");
+			if (new_x == -1)
+				new_x = (int) r.x / PokeGame.TILE_DIMENSION;
+			if (new_y == -1)
+				new_y = (int) r.y / PokeGame.TILE_DIMENSION;
 			world.addDoor(new Door(r, worldN, new_x, new_y));
 		}
 	}

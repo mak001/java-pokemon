@@ -60,5 +60,10 @@
    </properties>
    <polygon points="0,0 16,0 16,-48 -48,-48 -48,0 -16,0 -16,-16 0,-16"/>
   </object>
+  <object type="Event" x="96" y="208" width="16" height="80">
+   <properties>
+    <property name="class" value="Event"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

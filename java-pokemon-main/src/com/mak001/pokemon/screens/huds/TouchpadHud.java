@@ -1,5 +1,6 @@
 package com.mak001.pokemon.screens.huds;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -11,17 +12,33 @@ import com.mak001.pokemon.screens.GameScreen;
 public class TouchpadHud extends AbstractHud {
 
 	private ShapeRenderer shape;
-	private Rectangle r_button = new Rectangle(0, 0, 0, 0);
-	private Rectangle l_button = new Rectangle(0, 0, 0, 0);
+	private int gWidth = Gdx.graphics.getWidth();
+	private int gHeight = Gdx.graphics.getHeight();
 
-	private Rectangle d_pad_y = new Rectangle(0, 0, 0, 0);
-	private Rectangle d_pad_x = new Rectangle(0, 0, 0, 0);
-	private Circle a_button = new Circle();
-	private Circle b_button = new Circle();
+	private Rectangle d_pad_y_down;
+	private Rectangle d_pad_y_up;
+	private Rectangle d_pad_x_left;
+	private Rectangle d_pad_right;
+
+	private Polygon d_pad;
+
+	private Rectangle r_button;
+	private Rectangle l_button;
+
+	private Circle a_button;
+	private Circle b_button;
 
 	public TouchpadHud(GameScreen screen) {
 		super(screen);
 		shape = new ShapeRenderer();
+		generateButtons();
+	}
+
+	private void generateButtons() {
+		int d_pad_offset;
+
+		// TODO Auto-generated method stub
+
 	}
 
 	public void setBatch(SpriteBatch batch) {

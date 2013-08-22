@@ -1,6 +1,14 @@
 package com.mak001.pokemon.world;
 
+import com.badlogic.gdx.math.Rectangle;
+
 public abstract class ScriptedEvent {
+
+	private final Rectangle bounds;
+
+	public ScriptedEvent(Rectangle bounds) {
+		this.bounds = bounds;
+	}
 
 	private boolean running = false;
 
@@ -13,6 +21,10 @@ public abstract class ScriptedEvent {
 	public void run() {
 		if (running == false)
 			running = true;
+	}
+
+	public Rectangle getBounds() {
+		return bounds;
 	}
 
 }
