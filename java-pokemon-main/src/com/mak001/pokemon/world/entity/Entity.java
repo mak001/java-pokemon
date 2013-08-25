@@ -18,6 +18,7 @@ public abstract class Entity extends Locatable implements Disposable {
 	private boolean moved = false;
 	private boolean moved_ = false;
 	protected String generic_name;
+	private Speed speed = Speed.WALKING;
 
 	protected boolean talking = false;
 
@@ -238,16 +239,12 @@ public abstract class Entity extends Locatable implements Disposable {
 			}
 		}
 
-		for (NPC npc : world.getNPCs()) {
+		for (Entity npc : world.getEntities()) {
 			if (!npc.equals(this)) {
 				if (willCollide(npc, x, y)) {
 					return Collidable.SOLID;
 				}
 			}
-		}
-		if (!(this instanceof Player)) {
-			if (willCollide(world.getPlayer(), x, y))
-				return Collidable.SOLID;
 		}
 		return Collidable.NONE;
 	}
@@ -278,5 +275,13 @@ public abstract class Entity extends Locatable implements Disposable {
 
 	public boolean isTalking() {
 		return talking;
+	}
+
+	public Speed getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(Speed speed) {
+		this.speed = speed;
 	}
 }

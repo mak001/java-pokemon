@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.huds.NPCInteractionHud;
+import com.mak001.pokemon.world.Locatable;
 import com.mak001.pokemon.world.World;
 
 public class NPC extends Entity {
@@ -18,15 +19,7 @@ public class NPC extends Entity {
 	private Direction original_direction;
 	private int nextPosition = 1;
 
-	public NPC(Direction direction, Vector2 position, World world,
-			String generic_name) {
-		this(direction, position, world, generic_name, null);
-	}
-
-	public NPC(Direction direction, Vector2 position, World world,
-			String generic_name, String name) {
-		this(direction, position, world, null, generic_name, name);
-	}
+	private boolean shouldStop = false;
 
 	public NPC(Direction direction, final Vector2 position, World world,
 			Interaction interaction, String generic_name, String name) {
@@ -60,24 +53,34 @@ public class NPC extends Entity {
 		if (talking) {
 			setDirection(world.getPlayer().getPosition());
 		} else {
-			if (path.size() > 1) {
+			if (shouldStop == false) {
+				for (int i = 0; i < getSpeed().getSpeed(); i++) {
+					if (path.size() > 1) {
 
-				if (!isMoving()) {
-					if (path.get(nextPosition).x == position.x
-							&& path.get(nextPosition).y == position.y) {
-						updatePos();
-					}
-					setDirection(path.get(nextPosition));
+						if (!isMoving()) {
+							if (path.get(nextPosition).x == position.x
+									&& path.get(nextPosition).y == position.y) {
+								updatePos();
+							}
+							setDirection(path.get(nextPosition));
 
-					Vector2 v = getNextPos();
-					if (!isBlocked(v.x, v.y, direction)) {
-						move();
+							if (isInLineOfSight(world.getPlayer())) { // TODO
+								System.out.println(this.generic_name + " "
+										+ this.name
+										+ " has spotted the player!");
+							}
+
+							Vector2 v = getNextPos();
+							if (!isBlocked(v.x, v.y, direction)) {
+								move();
+							}
+						} else {
+							move();
+						}
+					} else {
+						direction = original_direction;
 					}
-				} else {
-					move();
 				}
-			} else {
-				direction = original_direction;
 			}
 		}
 		updateBounds();
@@ -148,7 +151,6 @@ public class NPC extends Entity {
 				hud.yesOption();
 			}
 		} else {
-
 			if (hud == null) {
 				resetHud();
 			} else {
@@ -163,6 +165,20 @@ public class NPC extends Entity {
 				}
 			}
 		}
+	}
+
+	public boolean isInLineOfSight(Locatable l) {
+		if (!l.equals(this))
+			return inLineWith(l) && getDirection(l).equals(getDirection());
+		return false;
+	}
+
+	public void stop() {
+		shouldStop = true;
+	}
+
+	public void resume() {
+		shouldStop = false;
 	}
 
 	public void resetHud() {

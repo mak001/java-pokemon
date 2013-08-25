@@ -8,5 +8,8 @@ public class GlobalVars {
 	public static float music_sound_level = 1f;
 
 	public static boolean hasPokedex = false;
+	public static boolean inBattle = false;
+
+	public static int questStage = 0;
 
 }

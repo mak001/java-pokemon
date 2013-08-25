@@ -51,6 +51,15 @@ public abstract class Locatable {
 		return Direction.UP;
 	}
 
+	public boolean inLineWith(Locatable l) {
+		return inLineWith(l.getPosition());
+	}
+
+	public boolean inLineWith(Vector2 pos) {
+		return (pos.x == position.x || pos.y == position.y)
+				|| (pos.x == position.x && pos.y == position.y);
+	}
+
 	public Vector2 getPosition(Direction direction) {
 		switch (direction) {
 		case DOWN:

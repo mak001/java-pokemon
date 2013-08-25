@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Entity;
@@ -39,7 +40,8 @@ public class WorldRenderer implements Disposable {
 		this.screen = screen;
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, VIRTUAL_WIDTH / 16, VIRTUAL_HEIGHT / 16);
+		camera.setToOrtho(false, VIRTUAL_WIDTH / PokeGame.TILE_DIMENSION,
+				VIRTUAL_HEIGHT / PokeGame.TILE_DIMENSION);
 		camera.update();
 
 		renderer = new OrthogonalTiledMapRenderer(world.getMap(),
@@ -54,7 +56,8 @@ public class WorldRenderer implements Disposable {
 		Gdx.gl.glViewport((int) viewport.x, (int) viewport.y,
 				(int) viewport.width, (int) viewport.height);
 
-		camera.setToOrtho(false, VIRTUAL_WIDTH / 16, VIRTUAL_HEIGHT / 16);
+		camera.setToOrtho(false, VIRTUAL_WIDTH / PokeGame.TILE_DIMENSION,
+				VIRTUAL_HEIGHT / PokeGame.TILE_DIMENSION);
 		camera.position.x = world.getPlayer().getPosition().x;
 		camera.position.y = world.getPlayer().getPosition().y;
 		camera.update();
@@ -65,31 +68,36 @@ public class WorldRenderer implements Disposable {
 	}
 
 	public void render() {
-
-		updateCamera();
-
-		renderer.renderTileLayer(terrain);
-		renderer.renderTileLayer(below);
-
-		ArrayList<ArrayList<Entity>> array = new ArrayList<ArrayList<Entity>>();
-		for (int i = 0; i < world.getHeight(); i++) {
-			array.add(new ArrayList<Entity>());
-
-		}
-		array.get(world.getHeight() - (int) world.getPlayer().getPosition().y)
-				.add(world.getPlayer());
-
-		for (Entity npc : world.getNPCs()) {
-			array.get(world.getHeight() - (int) npc.getPosition().y).add(npc);
-		}
-
-		for (ArrayList<Entity> ae : array) {
-			for (Entity e : ae) {
-				e.render(batch);
+		if (GlobalVars.inBattle) {
+			screen.battleRenderer.render();
+		} else {
+			if (!screen.battleRenderer.didReset()) {
+				screen.battleRenderer.dispose();
 			}
-		}
+			updateCamera();
 
-		renderer.renderTileLayer(above);
+			renderer.renderTileLayer(terrain);
+			renderer.renderTileLayer(below);
+
+			ArrayList<ArrayList<Entity>> array = new ArrayList<ArrayList<Entity>>();
+			for (int i = 0; i < world.getHeight(); i++) {
+				array.add(new ArrayList<Entity>());
+
+			}
+
+			for (Entity npc : world.getEntities()) {
+				array.get(world.getHeight() - (int) npc.getPosition().y).add(
+						npc);
+			}
+
+			for (ArrayList<Entity> ae : array) {
+				for (Entity e : ae) {
+					e.render(batch);
+				}
+			}
+
+			renderer.renderTileLayer(above);
+		}
 	}
 
 	@Override

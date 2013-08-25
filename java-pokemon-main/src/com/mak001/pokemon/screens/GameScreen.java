@@ -22,12 +22,14 @@ public class GameScreen extends AbstractScreen {
 	private int height;
 
 	private float scale = 1f;
+	public BattleRenderer battleRenderer;
 
 	public GameScreen(PokeGame game) {
 		super(game);
 		batch = new SpriteBatch();
 		setWorld(new WorldLoader(this, "test", 6, 7).getWorld());
 		huds = new OrganizedMap<Integer, AbstractHud>();
+		battleRenderer = new BattleRenderer();
 	}
 
 	public void setWorld(World world) {
@@ -88,6 +90,7 @@ public class GameScreen extends AbstractScreen {
 	public void dispose() {
 		super.dispose();
 		renderer.dispose();
+		battleRenderer.dispose();
 		for (AbstractHud hud : huds.values()) {
 			hud.dispose();
 		}

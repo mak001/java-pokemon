@@ -11,6 +11,7 @@ public class Collidable extends Locatable {
 	public static final int NONE = -1;
 	public static final int SOLID = 1;
 	public static final int CLIFF = 2;
+	public static final int SURF = 3;
 
 	private final Sound stepSound;
 	private final int flag;

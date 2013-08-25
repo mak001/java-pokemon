@@ -24,6 +24,7 @@ import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.objects.Collidable;
 import com.mak001.pokemon.world.objects.Door;
+import com.mak001.pokemon.world.objects.ScriptedEvent;
 
 public class WorldLoader {
 
@@ -109,10 +110,10 @@ public class WorldLoader {
 		if (_path != null) {
 			ArrayList<Vector2> path;
 			path = toPath(_path);
-			world.addNPC(new NPC(direction, path, world, interactionLoader
+			world.addEntity(new NPC(direction, path, world, interactionLoader
 					.loadInteractions(gName, name), gName, name));
 		} else {
-			world.addNPC(new NPC(direction, new Vector2(getPropInt(o, "x"),
+			world.addEntity(new NPC(direction, new Vector2(getPropInt(o, "x"),
 					getPropInt(o, "y")), world, interactionLoader
 					.loadInteractions(gName, name), gName, name));
 

@@ -3,7 +3,6 @@ package com.mak001.pokemon.world.entity;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.world.World;
-import com.mak001.pokemon.world.objects.Door;
 
 public class Player extends Entity {
 
@@ -29,61 +28,65 @@ public class Player extends Entity {
 
 	@Override
 	public void update() {
-		if (temp != null && !isMoving()) {
-			setDirection(temp);
-			temp = null;
-		}
-		if (!shouldMove_2 && !isMoving())
-			shouldMove = false;
+		for (int i = 0; i < getSpeed().getSpeed(); i++) {
+			if (temp != null && !isMoving()) {
+				setDirection(temp);
+				temp = null;
+			}
+			if (!shouldMove_2 && !isMoving())
+				shouldMove = false;
 
-		if (shouldMove) {
-			switch (getDirection()) {
-			case DOWN:
-				float tmpD = position.y - (1f / PokeGame.TILE_DIMENSION);
-				if (!isMoving()) {
-					if (!isBlocked(position.x, position.y - 1, Direction.DOWN)) {
+			if (shouldMove) {
+				switch (getDirection()) {
+				case DOWN:
+					float tmpD = position.y - (1f / PokeGame.TILE_DIMENSION);
+					if (!isMoving()) {
+						if (!isBlocked(position.x, position.y - 1,
+								Direction.DOWN)) {
+							position.y = tmpD;
+						}
+					} else {
 						position.y = tmpD;
 					}
-				} else {
-					position.y = tmpD;
-				}
-				break;
+					break;
 
-			case LEFT:
-				float tmpL = position.x - (1f / PokeGame.TILE_DIMENSION);
-				if (!isMoving()) {
-					if (!isBlocked(position.x - 1, position.y, Direction.LEFT)) {
+				case LEFT:
+					float tmpL = position.x - (1f / PokeGame.TILE_DIMENSION);
+					if (!isMoving()) {
+						if (!isBlocked(position.x - 1, position.y,
+								Direction.LEFT)) {
+							position.x = tmpL;
+						}
+					} else {
 						position.x = tmpL;
 					}
-				} else {
-					position.x = tmpL;
-				}
-				break;
+					break;
 
-			case RIGHT:
-				float tmpR = position.x + (1f / PokeGame.TILE_DIMENSION);
-				if (!isMoving()) {
-					if (!isBlocked(position.x + 1, position.y, Direction.RIGHT)) {
+				case RIGHT:
+					float tmpR = position.x + (1f / PokeGame.TILE_DIMENSION);
+					if (!isMoving()) {
+						if (!isBlocked(position.x + 1, position.y,
+								Direction.RIGHT)) {
+							position.x = tmpR;
+						}
+					} else {
 						position.x = tmpR;
 					}
-				} else {
-					position.x = tmpR;
-				}
-				break;
+					break;
 
-			case UP:
-				float tmpU = position.y + (1f / PokeGame.TILE_DIMENSION);
-				if (!isMoving()) {
-					if (!isBlocked(position.x, position.y + 1, Direction.UP)) {
+				case UP:
+					float tmpU = position.y + (1f / PokeGame.TILE_DIMENSION);
+					if (!isMoving()) {
+						if (!isBlocked(position.x, position.y + 1, Direction.UP)) {
+							position.y = tmpU;
+						}
+					} else {
 						position.y = tmpU;
 					}
-				} else {
-					position.y = tmpU;
+					break;
 				}
-				break;
-			}
-			if (isDoor(position.x, position.y)) {
 				world.handleDoor((int) position.x, (int) position.y);
+				world.handleEvent((int) position.x, (int) position.y);
 			}
 		}
 		updateBounds();
@@ -106,15 +109,6 @@ public class Player extends Entity {
 				shouldMove = true;
 			}
 		}
-	}
-
-	private boolean isDoor(float x, float y) {
-		boolean b = false;
-		for (Door d : world.getDoors()) {
-			if (d.getBounds().x == x && d.getBounds().y == y)
-				b = true;
-		}
-		return b;
 	}
 
 	public void setPosition(int x, int y) {

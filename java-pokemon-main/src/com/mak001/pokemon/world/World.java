@@ -5,26 +5,23 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
-import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
 import com.mak001.pokemon.world.objects.Collidable;
 import com.mak001.pokemon.world.objects.Door;
+import com.mak001.pokemon.world.objects.ScriptedEvent;
 
 public class World {
 
 	public GameScreen screen;
 	private Player player;
-	private ArrayList<NPC> npcs;
+	private ArrayList<Entity> entities;
 	private ArrayList<ScriptedEvent> events;
 	private ArrayList<Door> doors;
 	private ArrayList<Collidable> collisions;
@@ -56,7 +53,9 @@ public class World {
 		player = new Player(Direction.UP, (int) playerPos.x, mapHeight
 				- (int) playerPos.y, this);
 
-		npcs = new ArrayList<NPC>();
+		entities = new ArrayList<Entity>();
+		entities.add(player);
+
 		events = new ArrayList<ScriptedEvent>();
 		doors = new ArrayList<Door>();
 		collisions = new ArrayList<Collidable>();
@@ -68,8 +67,8 @@ public class World {
 
 	public void update() {
 		music.setVolume(GlobalVars.music_sound_level);
-		player.update();
-		for (Entity npc : npcs) {
+		// TODO - can change speeds by updating multiple times
+		for (Entity npc : entities) {
 			npc.update();
 		}
 		for (ScriptedEvent se : events) {
@@ -80,7 +79,7 @@ public class World {
 
 	public void dispose() {
 		player.dispose();
-		for (Entity npc : npcs) {
+		for (Entity npc : entities) {
 			npc.dispose();
 		}
 		map.dispose();
@@ -89,20 +88,12 @@ public class World {
 		doorOpen.dispose();
 	}
 
-	public ArrayList<NPC> getNPCs() {
-		return npcs;
+	public ArrayList<Entity> getEntities() {
+		return entities;
 	}
 
-	public ArrayList<Door> getDoors() {
-		return doors;
-	}
-
-	public ArrayList<ScriptedEvent> getEvents() {
-		return events;
-	}
-
-	public boolean addNPC(NPC npc) {
-		return npcs.add(npc);
+	public boolean addEntity(Entity entity) {
+		return entities.add(entity);
 	}
 
 	public boolean addEvent(ScriptedEvent se) {
@@ -126,35 +117,31 @@ public class World {
 	}
 
 	public void handleDoor(int x, int y) {
-		for (MapObject object : map.getLayers().get("objects").getObjects()) {
-			if (object instanceof RectangleMapObject) {
-				Rectangle bounds = ((RectangleMapObject) object).getRectangle();
-				if ((int) bounds.getX() / 16 == x
-						&& (int) bounds.getY() / 16 == y) {
-					String world = object.getProperties().get("world",
-							String.class);
-					int new_x = x;
-					int new_y = y;
-
-					try {
-						new_x = Integer.parseInt(object.getProperties().get(
-								"new_x", String.class));
-						new_y = Integer.parseInt(object.getProperties().get(
-								"new_y", String.class));
-					} catch (NumberFormatException e) {
-					}
-					doorOpen.play(GlobalVars.effects_sound_level);
-					if (world.equals(map_name)) {
-						player.setPosition(new_x, mapHeight - new_y);
-					} else {
-						World w = new WorldLoader(screen, world, new_x, new_y)
-								.getWorld();
-						screen.setWorld(w);
-						PokeGame.handler.setWorld(w);
-						// System.out.println("other worlds not handled yet");
-						// TODO - test
-					}
+		for (Door d : doors) {
+			if (d.getBounds().x == x && d.getBounds().y == y) {
+				doorOpen.play(GlobalVars.effects_sound_level);
+				if (d.getWorld().equals(map_name)) {
+					player.setPosition(d.getNewPosX(),
+							mapHeight - d.getNewPosY());
+					return;
+				} else {
+					World w = new WorldLoader(screen, d.getWorld(),
+							d.getNewPosX(), d.getNewPosY()).getWorld();
+					screen.setWorld(w);
+					PokeGame.handler.setWorld(w);
+					return;
 				}
+			}
+		}
+	}
+
+	public void handleEvent(int x, int y) {
+		for (ScriptedEvent e : events) {
+			if (e.getBounds().contains(x, y)) {
+				System.out.println("Event " + e.getClass().getSimpleName()
+						+ " was triggered");
+				// TODO
+				return;
 			}
 		}
 	}

@@ -19,7 +19,8 @@ import com.mak001.pokemon.screens.huds.ControllerHud;
 import com.mak001.pokemon.screens.huds.PauseHud;
 import com.mak001.pokemon.world.World;
 import com.mak001.pokemon.world.entity.Direction;
-import com.mak001.pokemon.world.entity.NPC;
+import com.mak001.pokemon.world.entity.Entity;
+import com.mak001.pokemon.world.entity.Speed;
 
 public class InputHandler implements InputProcessor, ControllerListener,
 		AccelerometerListener {
@@ -323,7 +324,7 @@ public class InputHandler implements InputProcessor, ControllerListener,
 			if (pressed) {
 				Vector2 vec = world.getPlayer().getPosition(
 						world.getPlayer().getDirection());
-				for (NPC npc : world.getNPCs()) {
+				for (Entity npc : world.getEntities()) {
 					if (npc.getPosition().x == vec.x
 							&& npc.getPosition().y == vec.y) {
 						npc.setTalking(true);
@@ -342,11 +343,20 @@ public class InputHandler implements InputProcessor, ControllerListener,
 	}
 
 	private void bButton(boolean pressed) {
-		if (!world.screen.isPaused()) {
+
+		if (world.screen.isPaused()) {// pause screen
+			if (pressed) {
+				AbstractHud hud = world.screen.getHuds().get(
+						GameScreen.PAUSE_HUD);
+				if (hud instanceof PauseHud) {
+					((PauseHud) hud).cancel();
+				}
+			}
+		} else if (world.getPlayer().isTalking()) {
 			if (pressed) {
 				Vector2 vec = world.getPlayer().getPosition(
 						world.getPlayer().getDirection());
-				for (NPC npc : world.getNPCs()) {
+				for (Entity npc : world.getEntities()) {
 					if (npc.getPosition().x == vec.x
 							&& npc.getPosition().y == vec.y) {
 						npc.setTalking(false);
@@ -355,13 +365,12 @@ public class InputHandler implements InputProcessor, ControllerListener,
 			}
 		} else {
 			if (pressed) {
-				AbstractHud hud = world.screen.getHuds().get(
-						GameScreen.PAUSE_HUD);
-				if (hud instanceof PauseHud) {
-					((PauseHud) hud).cancel();
-				}
+				world.getPlayer().setSpeed(Speed.RUNNING);
+			} else {
+				world.getPlayer().setSpeed(Speed.WALKING);
 			}
 		}
+
 	}
 
 	private void startButton() {

@@ -6,6 +6,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+		// TODO - change icon
+		// cfg.addIcon(path, fileType);
 		cfg.title = "java-pokemon";
 		cfg.useGL20 = true;
 		cfg.width = 480;
