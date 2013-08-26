@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.world.Locatable;
 import com.mak001.pokemon.world.World;
+import com.mak001.pokemon.world.entity.data.Direction;
+import com.mak001.pokemon.world.entity.data.Speed;
 import com.mak001.pokemon.world.objects.Collidable;
 
 public abstract class Entity extends Locatable implements Disposable {

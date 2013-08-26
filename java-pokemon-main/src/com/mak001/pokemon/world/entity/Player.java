@@ -3,6 +3,7 @@ package com.mak001.pokemon.world.entity;
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.world.World;
+import com.mak001.pokemon.world.entity.data.Direction;
 
 public class Player extends Entity {
 

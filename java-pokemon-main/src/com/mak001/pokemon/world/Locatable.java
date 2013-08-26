@@ -1,7 +1,7 @@
 package com.mak001.pokemon.world;
 
 import com.badlogic.gdx.math.Vector2;
-import com.mak001.pokemon.world.entity.Direction;
+import com.mak001.pokemon.world.entity.data.Direction;
 
 public abstract class Locatable {
 

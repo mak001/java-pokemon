@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
-import com.mak001.pokemon.world.entity.Interaction;
+import com.mak001.pokemon.world.entity.data.Interaction;
 
 public class InteractionLoader {
 

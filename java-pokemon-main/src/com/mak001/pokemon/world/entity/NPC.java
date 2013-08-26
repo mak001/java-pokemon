@@ -7,6 +7,8 @@ import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.huds.NPCInteractionHud;
 import com.mak001.pokemon.world.Locatable;
 import com.mak001.pokemon.world.World;
+import com.mak001.pokemon.world.entity.data.Direction;
+import com.mak001.pokemon.world.entity.data.Interaction;
 
 public class NPC extends Entity {
 

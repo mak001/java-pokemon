@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.mak001.pokemon.screens.GameScreen;
-import com.mak001.pokemon.world.entity.Interaction;
 import com.mak001.pokemon.world.entity.NPC;
+import com.mak001.pokemon.world.entity.data.Interaction;
 
 public class NPCInteractionHud extends AbstractHud {
 

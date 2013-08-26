@@ -1,4 +1,4 @@
-package com.mak001.pokemon.world.entity;
+package com.mak001.pokemon.world.entity.data;
 
 public class Interaction {
 

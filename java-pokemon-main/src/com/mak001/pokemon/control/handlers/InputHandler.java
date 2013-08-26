@@ -18,9 +18,9 @@ import com.mak001.pokemon.screens.huds.AbstractHud;
 import com.mak001.pokemon.screens.huds.ControllerHud;
 import com.mak001.pokemon.screens.huds.PauseHud;
 import com.mak001.pokemon.world.World;
-import com.mak001.pokemon.world.entity.Direction;
 import com.mak001.pokemon.world.entity.Entity;
-import com.mak001.pokemon.world.entity.Speed;
+import com.mak001.pokemon.world.entity.data.Direction;
+import com.mak001.pokemon.world.entity.data.Speed;
 
 public class InputHandler implements InputProcessor, ControllerListener,
 		AccelerometerListener {

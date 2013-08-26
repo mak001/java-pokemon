@@ -1,4 +1,4 @@
-package com.mak001.pokemon.world.entity;
+package com.mak001.pokemon.world.entity.data;
 
 public enum Direction {
 	LEFT("LEFT"), RIGHT("RIGHT"), UP("UP"), DOWN("DOWN");
