@@ -89,8 +89,8 @@ public class WorldLoader {
 				c = loader.loadClass("data.maps.events." + clazzName);
 
 				Constructor<?>[] cs = c.getConstructors();
-				Object invoke = cs[0].newInstance(((RectangleMapObject) o)
-						.getRectangle());
+				Object invoke = cs[0].newInstance(
+						((RectangleMapObject) o).getRectangle(), world);
 				ScriptedEvent se = (ScriptedEvent) (invoke);
 				world.addEvent(se);
 

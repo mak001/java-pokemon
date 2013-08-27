@@ -11,6 +11,7 @@ import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Entity;
+import com.mak001.pokemon.world.entity.NPC;
 import com.mak001.pokemon.world.entity.Player;
 import com.mak001.pokemon.world.entity.data.Direction;
 import com.mak001.pokemon.world.objects.Collidable;
@@ -71,10 +72,6 @@ public class World {
 		for (Entity npc : entities) {
 			npc.update();
 		}
-		for (ScriptedEvent se : events) {
-			if (!se.isRunning() && se.shouldTrigger())
-				se.run();
-		}
 	}
 
 	public void dispose() {
@@ -90,6 +87,31 @@ public class World {
 
 	public ArrayList<Entity> getEntities() {
 		return entities;
+	}
+
+	/**
+	 * 
+	 * @param genericName
+	 *            - the generic name to search for
+	 * @param name
+	 *            - the real name to search for
+	 * @return - A matching entity if one is found, otherwise it will return the
+	 *         player
+	 */
+	public Entity getEntity(String genericName, String name) {
+		for (Entity e : entities) {
+			if (e instanceof NPC) {
+				if (((NPC) e).getGenericName().equalsIgnoreCase(genericName)
+						&& ((NPC) e).getName().equalsIgnoreCase(name)) {
+					return e;
+				}
+			}
+		}
+		return player;
+	}
+
+	public ArrayList<ScriptedEvent> getEvents() {
+		return events;
 	}
 
 	public boolean addEntity(Entity entity) {
@@ -137,10 +159,8 @@ public class World {
 
 	public void handleEvent(int x, int y) {
 		for (ScriptedEvent e : events) {
-			if (e.getBounds().contains(x, y)) {
-				System.out.println("Event " + e.getClass().getSimpleName()
-						+ " was triggered");
-				// TODO
+			if (e.getBounds().contains(x, y) && e.shouldTrigger()) {
+				e.setRunning(true);
 				return;
 			}
 		}

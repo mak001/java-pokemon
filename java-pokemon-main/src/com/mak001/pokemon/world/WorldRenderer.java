@@ -14,12 +14,15 @@ import com.mak001.pokemon.GlobalVars;
 import com.mak001.pokemon.PokeGame;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.world.entity.Entity;
+import com.mak001.pokemon.world.objects.ScriptedEvent;
 
 public class WorldRenderer implements Disposable {
 
 	public World world;
 	private SpriteBatch batch;
 	public OrthographicCamera camera;
+	public CameraCenter cameraCenter;
+
 	private TiledMapTileLayer terrain;
 	private TiledMapTileLayer below;
 	private TiledMapTileLayer above;
@@ -47,6 +50,8 @@ public class WorldRenderer implements Disposable {
 		renderer = new OrthogonalTiledMapRenderer(world.getMap(),
 				(1f / PokeGame.TILE_DIMENSION), batch);
 
+		cameraCenter = new CameraCenter(world);
+
 		terrain = (TiledMapTileLayer) world.getMap().getLayers().get("terrain");
 		below = (TiledMapTileLayer) world.getMap().getLayers().get("below");
 		above = (TiledMapTileLayer) world.getMap().getLayers().get("above");
@@ -58,13 +63,26 @@ public class WorldRenderer implements Disposable {
 
 		camera.setToOrtho(false, VIRTUAL_WIDTH / PokeGame.TILE_DIMENSION,
 				VIRTUAL_HEIGHT / PokeGame.TILE_DIMENSION);
-		camera.position.x = world.getPlayer().getPosition().x;
-		camera.position.y = world.getPlayer().getPosition().y;
+
+		if (shouldUpdate()) {
+			cameraCenter.update();
+		}
+		camera.position.x = cameraCenter.getX();
+		camera.position.y = cameraCenter.getY();
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
 		renderer.setView(camera);
+	}
 
+	private boolean shouldUpdate() {
+		for (ScriptedEvent se : world.getEvents()) {
+			if (se.isRunning()) {
+				se.run();
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void render() {

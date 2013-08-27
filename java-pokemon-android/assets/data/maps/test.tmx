@@ -38,7 +38,7 @@
    <properties>
     <property name="generic_name" value="player"/>
     <property name="path" value="p"/>
-    <property name="real_name" value="player"/>
+    <property name="real_name" value="mak001"/>
    </properties>
   </object>
   <object name="a" type="NPC_PATH" x="400" y="96">

@@ -138,6 +138,10 @@ public class NPC extends Entity {
 		return name;
 	}
 
+	public String getGenericName() {
+		return generic_name;
+	}
+
 	public String getFullName() {
 		return generic_name + " " + name;
 	}

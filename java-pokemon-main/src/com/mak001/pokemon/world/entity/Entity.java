@@ -286,4 +286,9 @@ public abstract class Entity extends Locatable implements Disposable {
 	public void setSpeed(Speed speed) {
 		this.speed = speed;
 	}
+
+	@Override
+	public String toString() {
+		return generic_name;
+	}
 }
