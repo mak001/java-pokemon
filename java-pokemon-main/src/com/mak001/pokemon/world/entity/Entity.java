@@ -234,7 +234,7 @@ public abstract class Entity extends Locatable implements Disposable {
 		return isBlocked(getCollision((int) x, (int) f), d);
 	}
 
-	protected int getCollision(int x, int y) {// TODO
+	protected int getCollision(int x, int y) {
 		for (Collidable c : world.getCollision()) {
 			if (c.getPolygon().contains(x, y)) {
 				return c.getCollision();

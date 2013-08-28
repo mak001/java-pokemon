@@ -18,8 +18,9 @@ import com.mak001.pokemon.world.objects.ScriptedEvent;
 
 public class WorldRenderer implements Disposable {
 
-	public World world;
+	private World world;
 	private SpriteBatch batch;
+
 	public OrthographicCamera camera;
 	public CameraCenter cameraCenter;
 

@@ -29,6 +29,10 @@ public class Player extends Entity {
 
 	@Override
 	public void update() {
+		if (talking) {
+			setMovement(false, direction);
+		}
+
 		for (int i = 0; i < getSpeed().getSpeed(); i++) {
 			if (temp != null && !isMoving()) {
 				setDirection(temp);

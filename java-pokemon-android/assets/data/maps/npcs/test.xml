@@ -3,7 +3,7 @@
 
     <NPC
         generic_name="player"
-        real_name="player" >
+        real_name="mak001" >
 
         <INTERACTION text="Hello." >
 

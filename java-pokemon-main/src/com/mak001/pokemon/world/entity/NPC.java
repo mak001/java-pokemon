@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mak001.pokemon.PokeGame;
+import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.screens.huds.NPCInteractionHud;
 import com.mak001.pokemon.world.Locatable;
 import com.mak001.pokemon.world.World;
@@ -31,11 +32,6 @@ public class NPC extends Entity {
 				add(position);
 			}
 		}, world, interaction, generic_name, name);
-	}
-
-	public NPC(Direction direction, ArrayList<Vector2> path, World world,
-			String generic_name, String name) {
-		this(direction, path, world, null, generic_name, name);
 	}
 
 	public NPC(Direction direction, ArrayList<Vector2> path, World world,
@@ -67,9 +63,6 @@ public class NPC extends Entity {
 							setDirection(path.get(nextPosition));
 
 							if (isInLineOfSight(world.getPlayer())) { // TODO
-								System.out.println(this.generic_name + " "
-										+ this.name
-										+ " has spotted the player!");
 							}
 
 							Vector2 v = getNextPos();
@@ -148,29 +141,20 @@ public class NPC extends Entity {
 
 	@Override
 	public void setTalking(boolean talking) {
-		if (talking) {
-			if (hud == null) {
-				hud = new NPCInteractionHud(world.screen, this);
-				world.screen.addHud(hud);
-				this.talking = talking;
-			} else {
-				hud.yesOption();
-			}
-		} else {
-			if (hud == null) {
-				resetHud();
-			} else {
-				if (hud.getInteraction() != null) {
-					if (talking) {
-						hud.yesOption();
-					} else {
-						hud.noOption();
-					}
-				} else {
-					resetHud();
+		if (interaction != null) {
+
+			if (world.screen.getHuds().get(GameScreen.NPC_HUD) == null) {
+				if (hud == null && talking) {
+					hud = new NPCInteractionHud(world.screen, this);
+					world.screen.addHud(hud, GameScreen.NPC_HUD);
 				}
 			}
+			this.talking = talking;
 		}
+	}
+
+	public void freeze(boolean freeze) {
+		talking = freeze;
 	}
 
 	public boolean isInLineOfSight(Locatable l) {

@@ -21,8 +21,12 @@ public class OrganizedMap<K extends Object, V extends Object> {
 	}
 
 	public void put(K key, V value) {
-		keys.add(key);
-		values.add(value);
+		if (keys.contains(key)) {
+			values.set(keys.indexOf(key), value);
+		} else {
+			keys.add(key);
+			values.add(value);
+		}
 	}
 
 	public V get(K key) {
@@ -33,6 +37,13 @@ public class OrganizedMap<K extends Object, V extends Object> {
 
 	public V getAt(int index) {
 		return values.get(index);
+	}
+
+	public K getByValue(V value) {
+		if (values.contains(value)) {
+			return keys.get(values.indexOf(value));
+		}
+		return null;
 	}
 
 	public void remove(K key) {

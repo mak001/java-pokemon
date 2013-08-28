@@ -68,7 +68,6 @@ public class World {
 
 	public void update() {
 		music.setVolume(GlobalVars.music_sound_level);
-		// TODO - can change speeds by updating multiple times
 		for (Entity npc : entities) {
 			npc.update();
 		}

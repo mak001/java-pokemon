@@ -6,7 +6,8 @@ public class Interaction {
 	private Interaction yes, no;
 
 	public Interaction(String string, Interaction... next) {
-		this(string, next[0], next.length > 1 ? next[1] : null);
+		this(string, next != null && next.length > 0 ? next[0] : null,
+				next.length > 1 ? next[1] : null);
 	}
 
 	public Interaction(String string, Interaction yes, Interaction no) {

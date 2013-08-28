@@ -16,6 +16,7 @@ import com.mak001.pokemon.control.controllers.XperiaGamepad;
 import com.mak001.pokemon.screens.GameScreen;
 import com.mak001.pokemon.screens.huds.AbstractHud;
 import com.mak001.pokemon.screens.huds.ControllerHud;
+import com.mak001.pokemon.screens.huds.NPCInteractionHud;
 import com.mak001.pokemon.screens.huds.PauseHud;
 import com.mak001.pokemon.world.World;
 import com.mak001.pokemon.world.entity.Entity;
@@ -195,13 +196,13 @@ public class InputHandler implements InputProcessor, ControllerListener,
 	@Override
 	public void connected(Controller controller) {
 		world.screen.addHud(new ControllerHud(controller, world.screen, 500,
-				true));
+				true), GameScreen.CONTROLLER_HUD);
 	}
 
 	@Override
 	public void disconnected(Controller controller) {
 		world.screen.addHud(new ControllerHud(controller, world.screen, 500,
-				false));
+				false), GameScreen.CONTROLLER_HUD);
 	}
 
 	@Override
@@ -322,12 +323,20 @@ public class InputHandler implements InputProcessor, ControllerListener,
 	private void aButton(boolean pressed) {
 		if (!world.screen.isPaused()) {
 			if (pressed) {
-				Vector2 vec = world.getPlayer().getPosition(
-						world.getPlayer().getDirection());
-				for (Entity npc : world.getEntities()) {
-					if (npc.getPosition().x == vec.x
-							&& npc.getPosition().y == vec.y) {
-						npc.setTalking(true);
+				if (world.screen.getHuds().get(GameScreen.NPC_HUD) != null) {
+					AbstractHud hud = world.screen.getHuds().get(
+							GameScreen.NPC_HUD);
+					if (hud instanceof NPCInteractionHud) {
+						((NPCInteractionHud) hud).yesOption();
+					}
+				} else {
+					Vector2 vec = world.getPlayer().getPosition(
+							world.getPlayer().getDirection());
+					for (Entity npc : world.getEntities()) {
+						if (npc.getPosition().x == vec.x
+								&& npc.getPosition().y == vec.y) {
+							npc.setTalking(true);
+						}
 					}
 				}
 			}
@@ -354,12 +363,21 @@ public class InputHandler implements InputProcessor, ControllerListener,
 			}
 		} else if (world.getPlayer().isTalking()) {
 			if (pressed) {
-				Vector2 vec = world.getPlayer().getPosition(
-						world.getPlayer().getDirection());
-				for (Entity npc : world.getEntities()) {
-					if (npc.getPosition().x == vec.x
-							&& npc.getPosition().y == vec.y) {
-						npc.setTalking(false);
+
+				if (world.screen.getHuds().get(GameScreen.NPC_HUD) != null) {
+					AbstractHud hud = world.screen.getHuds().get(
+							GameScreen.NPC_HUD);
+					if (hud instanceof NPCInteractionHud) {
+						((NPCInteractionHud) hud).noOption();
+					}
+				} else {
+					Vector2 vec = world.getPlayer().getPosition(
+							world.getPlayer().getDirection());
+					for (Entity npc : world.getEntities()) {
+						if (npc.getPosition().x == vec.x
+								&& npc.getPosition().y == vec.y) {
+							npc.setTalking(false);
+						}
 					}
 				}
 			}

@@ -70,20 +70,27 @@ public class CameraCenter {
 	 *            - y position
 	 */
 	public void moveTo(float x, float y) {
-		float tempx = position.x;
-		float tempy = position.y;
-		if (position.x > x) {
-			tempx -= (1f / PokeGame.TILE_DIMENSION);
-		} else if (position.x < x) {
-			tempx += (1f / PokeGame.TILE_DIMENSION);
-		}
+		moveTo(x, y, 2);
+	}
 
-		if (position.y > y) {
-			tempy -= (1f / PokeGame.TILE_DIMENSION);
-		} else if (position.y < y) {
-			tempy += (1f / PokeGame.TILE_DIMENSION);
+	public void moveTo(float x, float y, int times) {
+		System.out.println("Moving to " + x + ", " + y + "  :  X" + times);
+		for (int i = 0; i < times; i++) {
+			float tempx = position.x;
+			float tempy = position.y;
+			if (position.x > x) {
+				tempx -= (1f / PokeGame.TILE_DIMENSION);
+			} else if (position.x < x) {
+				tempx += (1f / PokeGame.TILE_DIMENSION);
+			}
+
+			if (position.y > y) {
+				tempy -= (1f / PokeGame.TILE_DIMENSION);
+			} else if (position.y < y) {
+				tempy += (1f / PokeGame.TILE_DIMENSION);
+			}
+			update(tempx, tempy);
 		}
-		update(tempx, tempy);
 	}
 
 	public void setY(float y) {

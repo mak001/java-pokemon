@@ -13,10 +13,16 @@ import com.mak001.pokemon.world.WorldRenderer;
 
 public class GameScreen extends AbstractScreen {
 
+	public static final int PAUSE_HUD = 0, NPC_HUD = 1, CONTROLLER_HUD = 2,
+			OTHER = 3;
+
 	public WorldRenderer renderer;
+	public World world;
+
 	private boolean paused = false;
-	public static final int PAUSE_HUD = 0;
+
 	private OrganizedMap<Integer, AbstractHud> huds;
+	private PauseHud pauseHUD;
 	private SpriteBatch batch;
 	private int width;
 	private int height;
@@ -30,6 +36,7 @@ public class GameScreen extends AbstractScreen {
 		setWorld(new WorldLoader(this, "test", 6, 7).getWorld());
 		huds = new OrganizedMap<Integer, AbstractHud>();
 		battleRenderer = new BattleRenderer();
+		pauseHUD = new PauseHud(this);
 	}
 
 	public void setWorld(World world) {
@@ -37,6 +44,7 @@ public class GameScreen extends AbstractScreen {
 			this.renderer.dispose();
 		this.renderer = new WorldRenderer(world, this);
 		PokeGame.handler.setWorld(world);
+		this.world = world;
 	}
 
 	@Override
@@ -60,13 +68,15 @@ public class GameScreen extends AbstractScreen {
 			batch.setProjectionMatrix(renderer.camera.combined);
 
 			for (AbstractHud hud : huds.values()) {
-				hud.render(delta);
-				if (hud.getNeededCycles() != -1) {
-					hud.currentCycles++;
-				}
-				if (hud.currentCycles == hud.getNeededCycles()) {
-					toRemove[currIndex] = hud;
-					currIndex++;
+				if (hud != null) {
+					hud.render(delta);
+					if (hud.getNeededCycles() != -1) {
+						hud.currentCycles++;
+					}
+					if (hud.currentCycles == hud.getNeededCycles()) {
+						toRemove[currIndex] = hud;
+						currIndex++;
+					}
 				}
 			}
 		}
@@ -92,27 +102,34 @@ public class GameScreen extends AbstractScreen {
 		renderer.dispose();
 		battleRenderer.dispose();
 		for (AbstractHud hud : huds.values()) {
-			hud.dispose();
+			if (hud != null)
+				hud.dispose();
 		}
 		huds.clear();
 		batch.dispose();
 	}
 
 	public void addHud(AbstractHud hud) {
-		if (huds.containsKey(PAUSE_HUD)) {
-			huds.put(huds.keys().size(), hud);
-		} else {
-			// to avoid using space 0
-			huds.put(huds.keys().size() + 1, hud);
-		}
+		addHud(hud, OTHER);
+	}
+
+	public void addHud(AbstractHud hud, int key) {
+		huds.put(key, hud);
 	}
 
 	public void removeHud(AbstractHud hud) {
+		removeHud(huds.getByValue(hud));
 		hud.dispose();
-		huds.removeByValue(hud);
+	}
+
+	public void removeHud(int key) {
+		if (huds.get(key) != null && key != PAUSE_HUD)
+			huds.get(key).dispose();
+		huds.put(key, null);
 	}
 
 	public void pause() {
+		huds.put(PAUSE_HUD, pauseHUD);
 		paused = true;
 	}
 
@@ -120,13 +137,17 @@ public class GameScreen extends AbstractScreen {
 		paused = false;
 	}
 
-	public void setPaused() {
-		paused = !paused;
+	public void setPaused(boolean pause) {
+		paused = pause;
 		if (paused) {
-			huds.put(PAUSE_HUD, new PauseHud(this));
+			huds.put(PAUSE_HUD, pauseHUD);
 		} else {
-			huds.remove(PAUSE_HUD);
+			removeHud(PAUSE_HUD);
 		}
+	}
+
+	public void setPaused() {
+		setPaused(!paused);
 	}
 
 	public boolean isPaused() {
@@ -139,7 +160,6 @@ public class GameScreen extends AbstractScreen {
 
 	public void setScale(float scale) {
 		this.scale = scale;
-		System.out.println(scale);
 	}
 
 	public SpriteBatch getBatch() {

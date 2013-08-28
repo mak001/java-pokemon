@@ -27,7 +27,9 @@ public class NPCInteractionHud extends AbstractHud {
 				false);
 		black.setScale(1 / screen.getScale());
 
-		screen.renderer.world.getPlayer().setTalking(true);
+		if (screen.world != null)
+			if (screen.world.getPlayer() != null)
+				screen.world.getPlayer().setTalking(true);
 	}
 
 	public NPCInteractionHud(GameScreen screen, NPC npc) {
@@ -59,11 +61,10 @@ public class NPCInteractionHud extends AbstractHud {
 	public void dispose() {
 		atlas.dispose();
 		black.dispose();
-		// TODO Auto-generated method stub
 		if (npc != null) {
 			npc.resetHud();
 		}
-		screen.renderer.world.getPlayer().setTalking(false);
+		screen.world.getPlayer().setTalking(false);
 	}
 
 	@Override
@@ -84,11 +85,6 @@ public class NPCInteractionHud extends AbstractHud {
 
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public String toString() {
-		return "HUD: " + npc.getFullName();
 	}
 
 }
