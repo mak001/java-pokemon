@@ -61,25 +61,24 @@ public class GameScreen extends AbstractScreen {
 			renderer.update();
 		}
 
-		if (huds.size() != 0) {
-			renderer.camera.setToOrtho(false, Gdx.graphics.getWidth()
-					/ getScale(), Gdx.graphics.getHeight() / getScale());
-			renderer.camera.update();
-			batch.setProjectionMatrix(renderer.camera.combined);
+		renderer.camera.setToOrtho(false, Gdx.graphics.getWidth() / getScale(),
+				Gdx.graphics.getHeight() / getScale());
+		renderer.camera.update();
+		batch.setProjectionMatrix(renderer.camera.combined);
 
-			for (AbstractHud hud : huds.values()) {
-				if (hud != null) {
-					hud.render(delta);
-					if (hud.getNeededCycles() != -1) {
-						hud.currentCycles++;
-					}
-					if (hud.currentCycles == hud.getNeededCycles()) {
-						toRemove[currIndex] = hud;
-						currIndex++;
-					}
+		for (AbstractHud hud : huds.values()) {
+			if (hud != null) {
+				hud.render(delta);
+				if (hud.getNeededCycles() != -1) {
+					hud.currentCycles++;
+				}
+				if (hud.currentCycles == hud.getNeededCycles()) {
+					toRemove[currIndex] = hud;
+					currIndex++;
 				}
 			}
 		}
+
 		batch.end();
 
 		for (AbstractHud h : toRemove) {

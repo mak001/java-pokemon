@@ -28,8 +28,8 @@ public class WorldRenderer implements Disposable {
 	private TiledMapTileLayer below;
 	private TiledMapTileLayer above;
 
-	private static final int VIRTUAL_WIDTH = 240;
-	private static final int VIRTUAL_HEIGHT = 160;
+	public static final int VIRTUAL_WIDTH = 240;
+	public static final int VIRTUAL_HEIGHT = 160;
 	private static final float ASPECT_RATIO = (float) VIRTUAL_WIDTH
 			/ (float) VIRTUAL_HEIGHT;
 
