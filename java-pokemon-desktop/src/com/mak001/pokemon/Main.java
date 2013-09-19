@@ -9,7 +9,7 @@ public class Main {
 		// TODO - change icon
 		// cfg.addIcon(path, fileType);
 		cfg.title = "java-pokemon";
-		cfg.useGL20 = true;
+		cfg.useGL20 = false;
 		cfg.width = 480;
 		cfg.height = 320;
 
